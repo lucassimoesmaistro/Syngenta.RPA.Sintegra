@@ -15,3 +15,5 @@
 /src/Syngenta.RPA.Sintegra.Repository/obj
 /src/Syngenta.RPA.Sintegra.AntiCorruption/bin/Debug/netcoreapp2.2
 /src/Syngenta.RPA.Sintegra.AntiCorruption/obj
+/src/Syngenta.RPA.Sintegra.ScheduledService/bin/Debug/netcoreapp2.2/win10-x64
+/src/Syngenta.RPA.Sintegra.ScheduledService/obj

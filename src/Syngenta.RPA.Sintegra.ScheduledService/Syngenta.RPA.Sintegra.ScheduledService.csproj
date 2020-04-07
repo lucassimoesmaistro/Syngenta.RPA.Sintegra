@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Syngenta.Common\Syngenta.Common.csproj" />
+    <ProjectReference Include="..\Syngenta.RPA.Sintegra.Application\Syngenta.RPA.Sintegra.Application.csproj" />
+    <ProjectReference Include="..\Syngenta.RPA.Sintegra.Bootstrapper\Syngenta.RPA.Sintegra.Bootstrapper.csproj" />
+    <ProjectReference Include="..\Syngenta.RPA.Sintegra.Domain\Syngenta.RPA.Sintegra.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

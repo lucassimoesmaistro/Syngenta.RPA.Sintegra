@@ -17,3 +17,12 @@
 /src/Syngenta.RPA.Sintegra.AntiCorruption/obj
 /src/Syngenta.RPA.Sintegra.ScheduledService/bin/Debug/netcoreapp2.2/win10-x64
 /src/Syngenta.RPA.Sintegra.ScheduledService/obj
+/src/Syngenta.Common/bin/Release/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.AntiCorruption/bin/Debug/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.Application/bin/Release/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.Bootstrapper/bin/Release/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.Domain/bin/Release/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.Repository/bin/Debug/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.ScheduledService/bin/Release/netcoreapp3.1/win10-x64/publish
+/src/Syngenta.RPA.Sintegra.ScheduledService/bin/Release/netcoreapp3.1/win10-x64
+/src/Syngenta.RPA.Sintegra.ScheduledService/Properties/PublishProfiles

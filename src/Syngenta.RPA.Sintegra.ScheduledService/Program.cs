@@ -12,26 +12,32 @@ namespace Syngenta.RPA.Sintegra.ScheduledService
         public static void Main(string[] args)
         {
             ServiceProvider serviceProvider = Startup(args);
+            if (args.Length == 0)
+            {
+                Console.WriteLine($"**********Invalid Command**********");
+                return;
+            }
 
-            var application = serviceProvider.GetService<IInputFilesApplication>();
-            application.GetAllFilesInInputFolder();
-            //if (args[1].Equals("InputFiles"))
-            //{
-            //    var application = serviceProvider.GetService<IInputFilesApplication>();
-            //    application.GetAllFilesInInputFolder();
-            //}
-            //else if (args[1].Equals("SintegraComunication"))
-            //{
+            Console.WriteLine($"Arguments: {args[0]}");
+            
+            if (args[0].Equals("InputFiles"))
+            {
+                var application = serviceProvider.GetService<IInputFilesApplication>();
+                bool result = application.GetAllFilesInInputFolder().Result;
+                Console.WriteLine(result ? "True" : "False");
+            }
+            else if (args[0].Equals("SintegraComunication"))
+            {
 
-            //}
-            //else if (args[1].Equals("CustomerUpdate"))
-            //{
+            }
+            else if (args[0].Equals("CustomerUpdate"))
+            {
 
-            //}
-            //else if (args[1].Equals("OutputFiles"))
-            //{
+            }
+            else if (args[0].Equals("OutputFiles"))
+            {
 
-            //}
+            }
 
 
         }

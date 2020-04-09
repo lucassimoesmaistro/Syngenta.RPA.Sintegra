@@ -18,9 +18,10 @@ namespace Syngenta.RPA.Sintegra.Application.InputFiles
         public async Task<bool> GetAllFilesInInputFolder()
         {
             Console.WriteLine(DateTime.Now);
+            Console.WriteLine(_filesPath);
             Thread.Sleep(15000);
             Console.WriteLine(DateTime.Now);
-            return true;
+            return await Task.Run(()=> true);
         }
 
         public void Dispose()

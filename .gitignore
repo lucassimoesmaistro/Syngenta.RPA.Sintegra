@@ -26,3 +26,7 @@
 /src/Syngenta.RPA.Sintegra.ScheduledService/bin/Release/netcoreapp3.1/win10-x64/publish
 /src/Syngenta.RPA.Sintegra.ScheduledService/bin/Release/netcoreapp3.1/win10-x64
 /src/Syngenta.RPA.Sintegra.ScheduledService/Properties/PublishProfiles
+/src/Syngenta.RPA.Sintegra.Application/bin/Debug/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.Bootstrapper/bin/Debug/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.Domain/bin/Debug/netcoreapp3.1
+/src/Syngenta.RPA.Sintegra.ScheduledService/bin/Debug/netcoreapp3.1

@@ -7,7 +7,7 @@ namespace Syngenta.RPA.Sintegra.Domain
 {
     public class RequestItem : Entity
     {
-        public Guid RequestId { get; private set; }
+        public Guid? RequestId { get; private set; }
         public string CustomerId { get; private set; }
         public string CustomerName { get; private set; }
         public string CustomerStreet { get; private set; }

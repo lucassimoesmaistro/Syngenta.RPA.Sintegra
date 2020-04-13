@@ -7,7 +7,7 @@ namespace Syngenta.RPA.Sintegra.Application.InputFiles.Models
     public class CustomersColletionModel
     {
         [ExcelColumn("Customer")]
-        public string Id { get; set; }
+        public string CustomerId { get; set; }
         [ExcelColumn("Name 1")]
         public string Name { get; set; }
         [ExcelColumn("Street")]

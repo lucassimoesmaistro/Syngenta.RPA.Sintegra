@@ -25,7 +25,31 @@ namespace Syngenta.RPA.Sintegra.Domain
         {
             _requestItems = new List<RequestItem>();
         }
+        public static class RequestFactory
+        {
+            public static Request NewDraftOfRequest(string fileName)
+            {
+                var request = new Request
+                {
+                    FileName = fileName,
+                };
+
+                request.MakeDraft();
+                return request;
+            }
+        }
+
+        private void MakeDraft()
+        {
+            RequestStatus = RequestStatus.Draft;
+        }
+
+        public void AddItem(RequestItem item)
+        {
+            item.ConnectToRequest(Id);
+
+            _requestItems.Add(item);
+        }
     }
 
-    
 }

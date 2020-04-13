@@ -23,8 +23,9 @@ namespace Syngenta.RPA.Sintegra.ScheduledService
             if (args[0].Equals("InputFiles"))
             {
                 var application = serviceProvider.GetService<IInputFilesApplication>();
-                bool result = application.GetAllFilesInInputFolder().Result;
-                Console.WriteLine(result ? "True" : "False");
+                var result = application.GetAllFilesInInputFolder().Result;
+                result.ForEach(f => Console.WriteLine(f));
+                
             }
             else if (args[0].Equals("SintegraComunication"))
             {

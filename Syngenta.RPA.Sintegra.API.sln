@@ -19,7 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6EE9726A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syngenta.RPA.Sintegra.AntiCorruption", "src\Syngenta.RPA.Sintegra.AntiCorruption\Syngenta.RPA.Sintegra.AntiCorruption.csproj", "{0FFBF527-9AEB-4B9F-BED1-67BCB8E7424B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syngenta.RPA.Sintegra.ScheduledService", "src\Syngenta.RPA.Sintegra.ScheduledService\Syngenta.RPA.Sintegra.ScheduledService.csproj", "{E56401EB-06A7-4060-9A2F-01DB61BDD30E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syngenta.RPA.Sintegra.ScheduledService", "src\Syngenta.RPA.Sintegra.ScheduledService\Syngenta.RPA.Sintegra.ScheduledService.csproj", "{E56401EB-06A7-4060-9A2F-01DB61BDD30E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syngenta.RPA.Sintegra.Application.Tests", "test\Syngenta.RPA.Sintegra.Application.Tests\Syngenta.RPA.Sintegra.Application.Tests.csproj", "{DD35B984-58B8-458E-ADB2-4814B82767F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{E56401EB-06A7-4060-9A2F-01DB61BDD30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E56401EB-06A7-4060-9A2F-01DB61BDD30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E56401EB-06A7-4060-9A2F-01DB61BDD30E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +71,7 @@ Global
 		{EC248618-39CA-46EA-989C-FEFF5C05B491} = {1DBA0D71-CA1F-4C37-9951-017657DA1FB2}
 		{6EE9726A-4631-4E81-B62C-DEEE4704D574} = {1DBA0D71-CA1F-4C37-9951-017657DA1FB2}
 		{0FFBF527-9AEB-4B9F-BED1-67BCB8E7424B} = {1DBA0D71-CA1F-4C37-9951-017657DA1FB2}
+		{DD35B984-58B8-458E-ADB2-4814B82767F6} = {6EE9726A-4631-4E81-B62C-DEEE4704D574}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7ECCF43A-46AC-4969-9A99-AE9D04F04EEB}

@@ -12,76 +12,85 @@ namespace Syngenta.Common.Office
 {
     public static class ExcelExtensions
     {
-        private readonly static string rootFolder = Path.Combine(Directory.GetCurrentDirectory(), "Excel");
-        public static string Read(string fileName, string sheetName)
+        public static List<T> Read<T>(string fullPath)
         {
-            string folderName = "Upload";
-            //string webRootPath = _hostingEnvironment.WebRootPath;
-            string newPath = Path.Combine(rootFolder, folderName);
             StringBuilder sb = new StringBuilder();
-            if (!Directory.Exists(newPath))
+            var listToReturn = new List<T>();
+
+            string sFileExtension = Path.GetExtension(fullPath).ToLower();
+            ISheet sheet;
+
+            using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
             {
-                Directory.CreateDirectory(newPath);
-            }
-            using (FileStream file = new FileStream($@"{rootFolder}\{fileName}", FileMode.Open, FileAccess.Read))
-            {
-                string sFileExtension = Path.GetExtension(file.Name).ToLower();
-                ISheet sheet;
-                string fullPath = Path.Combine(newPath, file.Name);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
+                stream.Position = 0;
+                if (sFileExtension == ".xls")
                 {
-                    file.CopyTo(stream);
-                    stream.Position = 0;
-                    if (sFileExtension == ".xls")
+                    HSSFWorkbook hssfwb = new HSSFWorkbook(stream); //This will read the Excel 97-2000 formats  
+                    sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook  
+                }
+                else
+                {
+                    XSSFWorkbook hssfwb = new XSSFWorkbook(stream); //This will read 2007 Excel format  
+                    sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
+                }
+                IRow headerRow = sheet.GetRow(0); //Get Header Row
+                int cellCount = headerRow.LastCellNum;
+
+                PropertyInfo[] properties = typeof(T).GetProperties();
+                Dictionary<int, PropertyInfo> dictionaryOfColumns = new Dictionary<int, PropertyInfo>();
+//                sb.Append("<table class='table'><tr>");
+                for (int columnIndex = 0; columnIndex < cellCount; columnIndex++)
+                {
+                    ICell cell = headerRow.GetCell(columnIndex);
+                    if (cell == null || string.IsNullOrWhiteSpace(cell.ToString())) continue;
+
+                    PropertyInfo property = properties
+                        .Where(w => w.CustomAttributes
+                                            .Any(x=>x.ConstructorArguments
+                                                        .Where(ca=>ca.Value.Equals(cell.ToString())).Any())).FirstOrDefault();
+
+                    if (property != null)
+                        dictionaryOfColumns.Add(columnIndex, property);
+//                    sb.Append("<th>" + cell.ToString() + "</th>");
+                }
+
+
+                for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++) //Read Excel File
+                {
+                    IRow row = sheet.GetRow(i);
+                    if (row == null) continue;
+                    if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+
+                    object item = Activator.CreateInstance(typeof(T));
+
+                    for (int cellIndex = row.FirstCellNum; cellIndex < cellCount; cellIndex++)
                     {
-                        HSSFWorkbook hssfwb = new HSSFWorkbook(stream); //This will read the Excel 97-2000 formats  
-                        sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook  
-                    }
-                    else
-                    {
-                        XSSFWorkbook hssfwb = new XSSFWorkbook(stream); //This will read 2007 Excel format  
-                        sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
-                    }
-                    IRow headerRow = sheet.GetRow(0); //Get Header Row
-                    int cellCount = headerRow.LastCellNum;
-                    sb.Append("<table class='table'><tr>");
-                    for (int j = 0; j < cellCount; j++)
-                    {
-                        NPOI.SS.UserModel.ICell cell = headerRow.GetCell(j);
-                        if (cell == null || string.IsNullOrWhiteSpace(cell.ToString())) continue;
-                        sb.Append("<th>" + cell.ToString() + "</th>");
-                    }
-                    sb.Append("</tr>");
-                    sb.AppendLine("<tr>");
-                    for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++) //Read Excel File
-                    {
-                        IRow row = sheet.GetRow(i);
-                        if (row == null) continue;
-                        if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
-                        for (int j = row.FirstCellNum; j < cellCount; j++)
+                        if (row.GetCell(cellIndex) != null)
                         {
-                            if (row.GetCell(j) != null)
-                                sb.Append("<td>" + row.GetCell(j).ToString() + "</td>");
+                            if (dictionaryOfColumns.ContainsKey(cellIndex))
+                            {
+                                var objectColumn = item.GetType().GetProperty(dictionaryOfColumns[cellIndex].Name);
+                                objectColumn.SetValue(item, row.GetCell(cellIndex).ToString());
+                            }
                         }
-                        sb.AppendLine("</tr>");
                     }
-                    sb.Append("</table>");
+                    listToReturn.Add((T)item);
                 }
             }
-            return sb.ToString();
+            return listToReturn;
         }
-        public static MemoryStream Create<T>(string fileName, string sheetName, List<T> list)
+        public static MemoryStream Create<T>(string path, string fileName, string sheetName, List<T> list)
         {
             if (list == null || list.Count <= 0) return null;
 
-            if (!Directory.Exists(rootFolder))
-                Directory.CreateDirectory(rootFolder);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
 
             string sFileName = $"{fileName}_{System.DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
 
             var memory = new MemoryStream();
 
-            using (var fs = new FileStream(Path.Combine(rootFolder, sFileName), FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(Path.Combine(path, sFileName), FileMode.Create, FileAccess.Write))
             {
                 IWorkbook workbook;
                 workbook = new XSSFWorkbook();
@@ -145,33 +154,13 @@ namespace Syngenta.Common.Office
 
                 workbook.Write(fs);
             }
-            using (var stream = new FileStream(Path.Combine(rootFolder, sFileName), FileMode.Open))
+            using (var stream = new FileStream(Path.Combine(path, sFileName), FileMode.Open))
             {
                 stream.CopyTo(memory);
             }
             memory.Position = 0;
             return memory;
 
-        }
-
-        private static void DeleteFile()
-        {
-            System.Threading.Thread thread = new System.Threading.Thread(CheckOldFiles);
-            thread.IsBackground = true;
-            thread.Start();
-        }
-
-        private static void CheckOldFiles()
-        {
-            DirectoryInfo folder = new DirectoryInfo(rootFolder);
-            FileInfo[] files = folder.GetFiles();
-            Array.Sort(files, delegate (FileInfo a, FileInfo b) { return DateTime.Compare(a.CreationTime, b.CreationTime); });
-
-            foreach (FileInfo arquivo in files)
-            {
-                if (arquivo.LastWriteTime.Date.ToUniversalTime() < DateTime.Now.Date.ToUniversalTime())
-                    File.Delete(arquivo.FullName);
-            }
         }
 
     }

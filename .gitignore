@@ -32,3 +32,17 @@
 /src/Syngenta.RPA.Sintegra.ScheduledService/bin/Debug/netcoreapp3.1
 /test/Syngenta.RPA.Sintegra.Application.Tests/bin/Debug/netcoreapp3.1
 /test/Syngenta.RPA.Sintegra.Application.Tests/obj
+/src/Syngenta.Sintegra.AntiCorruption/bin/Debug/netcoreapp3.1
+/src/Syngenta.Sintegra.AntiCorruption/obj
+/src/Syngenta.Sintegra.Application/bin
+/src/Syngenta.Sintegra.Application/obj
+/src/Syngenta.Sintegra.Bootstrapper/bin
+/src/Syngenta.Sintegra.Bootstrapper/obj
+/src/Syngenta.Sintegra.Domain/bin
+/src/Syngenta.Sintegra.Domain/obj
+/src/Syngenta.Sintegra.Repository/bin/Debug/netcoreapp3.1
+/src/Syngenta.Sintegra.Repository/obj
+/src/Syngenta.Sintegra.ScheduledService/bin
+/src/Syngenta.Sintegra.ScheduledService/obj
+/test/Syngenta.Sintegra.Application.Tests/bin/Debug/netcoreapp3.1
+/test/Syngenta.Sintegra.Application.Tests/obj

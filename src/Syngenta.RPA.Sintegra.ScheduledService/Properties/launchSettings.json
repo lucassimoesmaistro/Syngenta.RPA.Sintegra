@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Syngenta.RPA.Sintegra.ScheduledService": {
-      "commandName": "Project",
-      "commandLineArgs": "InputFiles"
-    }
-  }
-}

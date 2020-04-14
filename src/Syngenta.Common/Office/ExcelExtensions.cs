@@ -162,6 +162,10 @@ namespace Syngenta.Common.Office
             return memory;
 
         }
+        public static void DeleteFile(string fullPath)
+        {
+            File.Delete(fullPath);
+        }
 
     }
 

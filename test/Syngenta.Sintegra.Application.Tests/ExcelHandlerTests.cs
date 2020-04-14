@@ -14,7 +14,6 @@ namespace Syngenta.Sintegra.Application.Tests
     {
 
         private readonly ApplicationTestsFixture _applicationTestsFixture;
-
         public ExcelHandlerTests(ApplicationTestsFixture applicationTestsFixture)
         {
             _applicationTestsFixture = applicationTestsFixture;
@@ -53,8 +52,9 @@ namespace Syngenta.Sintegra.Application.Tests
         private InputFilesApplication GetApplication()
         {
             var configuration = _applicationTestsFixture.GetConfiguration();
+            var _repository = new Mock<IRequestRepository>();
 
-            var app = new InputFilesApplication(configuration, _applicationTestsFixture.AutoMapperInitializer());
+            var app = new InputFilesApplication(configuration, _applicationTestsFixture.AutoMapperInitializer(), _repository.Object);
             return app;
         }
 

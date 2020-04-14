@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
@@ -18,6 +23,7 @@
     <ProjectReference Include="..\Syngenta.Sintegra.Application\Syngenta.Sintegra.Application.csproj" />
     <ProjectReference Include="..\Syngenta.Sintegra.Bootstrapper\Syngenta.Sintegra.Bootstrapper.csproj" />
     <ProjectReference Include="..\Syngenta.Sintegra.Domain\Syngenta.Sintegra.Domain.csproj" />
+    <ProjectReference Include="..\Syngenta.Sintegra.Repository\Syngenta.Sintegra.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

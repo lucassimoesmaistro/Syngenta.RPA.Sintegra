@@ -17,11 +17,15 @@ namespace Syngenta.Sintegra.Application.InputFiles
     {
         private readonly string _filesPath;
         private readonly IMapper _mapper;
+        private readonly IRequestRepository _repository;
+
         public InputFilesApplication(IConfiguration configuration,
-                                 IMapper mapper)
+                                 IMapper mapper,
+                                 IRequestRepository repository)
         {
             _filesPath = configuration["FilesPath:NewFiles"];
             _mapper = mapper;
+            _repository = repository;
         }
 
         public IConfiguration Configuration { get; }
@@ -55,7 +59,8 @@ namespace Syngenta.Sintegra.Application.InputFiles
                         var item = _mapper.Map<RequestItem>(customer);
                         request.AddItem(item);
                     });
-
+                    _repository.Add(request);
+                    var retorno = _repository.UnitOfWork.Commit().Result;
                     requests.Add(request);
                 });
                 return requests;

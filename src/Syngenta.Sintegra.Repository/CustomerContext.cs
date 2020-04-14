@@ -49,4 +49,5 @@ namespace Syngenta.Sintegra.Repository
             base.OnModelCreating(modelBuilder);
         }
     }
+    
 }

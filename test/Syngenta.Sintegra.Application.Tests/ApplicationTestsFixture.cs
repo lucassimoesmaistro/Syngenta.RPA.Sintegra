@@ -31,12 +31,6 @@ namespace Syngenta.Sintegra.Application.Tests
         }
         public IMapper AutoMapperInitializer()
         {
-            
-            Mapper.Reset();
-            Mapper.Initialize(x =>
-            {
-                x.AddProfile<ViewModelToDomainMappingProfile>();
-            });
             var mockMapper = new MapperConfiguration(x =>
             {
                 x.AddProfile<ViewModelToDomainMappingProfile>();

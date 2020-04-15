@@ -46,3 +46,5 @@
 /src/Syngenta.Sintegra.ScheduledService/obj
 /test/Syngenta.Sintegra.Application.Tests/bin/Debug/netcoreapp3.1
 /test/Syngenta.Sintegra.Application.Tests/obj
+/test/Syngenta.Sintegra.IntegratedTests/bin/Debug/netcoreapp3.1
+/test/Syngenta.Sintegra.IntegratedTests/obj

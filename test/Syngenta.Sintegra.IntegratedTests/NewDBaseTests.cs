@@ -9,7 +9,7 @@ namespace Syngenta.Sintegra.IntegratedTests
     public class NewDBaseTests
     {
         [Fact(DisplayName = "Get Data")]
-        [Trait("Category", "New dBase")]
+        [Trait("Category", "NewdBase")]
         public void ShouldGetData()
         {
             // Arrange
@@ -25,7 +25,7 @@ namespace Syngenta.Sintegra.IntegratedTests
             var result = newDBase.GetDataByCnpj("91032201000126", "RS");
 
             // Assert
-            Assert.False(true);
+            Assert.Equal(200, result.Response.Status.Code);
 
         }
     }

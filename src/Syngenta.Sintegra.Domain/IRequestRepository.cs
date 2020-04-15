@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Syngenta.Sintegra.Domain
 {
@@ -9,6 +10,6 @@ namespace Syngenta.Sintegra.Domain
     {
 
         void Add(Request request);
-
+        Task<IEnumerable<Request>> GetAllRequestsWithRegisteredItems();
     }
 }

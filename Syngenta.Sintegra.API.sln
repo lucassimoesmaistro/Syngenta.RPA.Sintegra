@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syngenta.Sintegra.AntiCorru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syngenta.Sintegra.ScheduledService", "src\Syngenta.Sintegra.ScheduledService\Syngenta.Sintegra.ScheduledService.csproj", "{E56401EB-06A7-4060-9A2F-01DB61BDD30E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syngenta.Sintegra.Application.Tests", "test\Syngenta.Sintegra.Application.Tests\Syngenta.Sintegra.Application.Tests.csproj", "{DD35B984-58B8-458E-ADB2-4814B82767F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syngenta.Sintegra.IntegratedTests", "test\Syngenta.Sintegra.IntegratedTests\Syngenta.Sintegra.IntegratedTests.csproj", "{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syngenta.Sintegra.IntegratedTests", "test\Syngenta.Sintegra.IntegratedTests\Syngenta.Sintegra.IntegratedTests.csproj", "{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syngenta.Sintegra.Application.Tests", "test\Syngenta.Sintegra.Application.Tests\Syngenta.Sintegra.Application.Tests.csproj", "{36CE5227-2B64-4A21-A2F3-E3147FDC5389}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,14 +59,14 @@ Global
 		{E56401EB-06A7-4060-9A2F-01DB61BDD30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E56401EB-06A7-4060-9A2F-01DB61BDD30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E56401EB-06A7-4060-9A2F-01DB61BDD30E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD35B984-58B8-458E-ADB2-4814B82767F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CE5227-2B64-4A21-A2F3-E3147FDC5389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CE5227-2B64-4A21-A2F3-E3147FDC5389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CE5227-2B64-4A21-A2F3-E3147FDC5389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CE5227-2B64-4A21-A2F3-E3147FDC5389}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,8 +77,8 @@ Global
 		{EC248618-39CA-46EA-989C-FEFF5C05B491} = {1DBA0D71-CA1F-4C37-9951-017657DA1FB2}
 		{6EE9726A-4631-4E81-B62C-DEEE4704D574} = {1DBA0D71-CA1F-4C37-9951-017657DA1FB2}
 		{0FFBF527-9AEB-4B9F-BED1-67BCB8E7424B} = {1DBA0D71-CA1F-4C37-9951-017657DA1FB2}
-		{DD35B984-58B8-458E-ADB2-4814B82767F6} = {6EE9726A-4631-4E81-B62C-DEEE4704D574}
 		{05C6226B-0DEA-40C8-9DB6-D5F7BD9E2542} = {6EE9726A-4631-4E81-B62C-DEEE4704D574}
+		{36CE5227-2B64-4A21-A2F3-E3147FDC5389} = {6EE9726A-4631-4E81-B62C-DEEE4704D574}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7ECCF43A-46AC-4969-9A99-AE9D04F04EEB}

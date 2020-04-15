@@ -1,26 +1,40 @@
-﻿using Syngenta.Common.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Syngenta.Common.Data;
 using Syngenta.Sintegra.Domain;
+using Syngenta.Sintegra.Repository.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Syngenta.Sintegra.Repository.Repository
 {
     public class RequestRepository : IRequestRepository
     {
-        private readonly CustomerContext _context;
+        private readonly CustomerContext _db;
 
         public RequestRepository(CustomerContext context)
         {
-            _context = context;
+            _db = context;
         }
-        public IUnitOfWork UnitOfWork => _context;
+        public IUnitOfWork UnitOfWork => _db;
 
         public void Add(Request request)
         {
-            _context.RequestVerification.Add(request);
+            _db.RequestVerification.Add(request);
         }
 
         public void Dispose()
         {
-            _context?.Dispose();
+            _db?.Dispose();
+        }
+        public async Task<IEnumerable<Request>> GetAllRequestsWithRegisteredItems()
+        {
+//            var sql = _db.RequestVerification.Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems)).ToSql();
+            return await _db.RequestVerification
+                .Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems))
+                .Include(i=>i.RequestItems)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

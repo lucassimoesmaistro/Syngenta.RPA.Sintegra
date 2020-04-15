@@ -1,8 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using Syngenta.Sintegra.Application.AutoMapper;
+using Syngenta.Sintegra.Application.InputFiles;
+using Syngenta.Sintegra.Application.SintegraComunication;
+using Syngenta.Sintegra.Domain;
+using Syngenta.Sintegra.Repository;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Syngenta.Sintegra.Application.Tests
@@ -20,6 +27,34 @@ namespace Syngenta.Sintegra.Application.Tests
                         .AddJsonFile(appSetting)
                         .Build();
         }
+
+        public DataValidatorApplication GetDataValidatorApplication()
+        {
+            var configuration = GetConfiguration();
+
+            var repository = new Mock<IRequestRepository>();
+            
+            repository.Setup(x => x.GetAllRequestsWithRegisteredItems())
+                          .Returns(Task.Run(()=>GetRequestCollectionMock()));
+
+            var app = new DataValidatorApplication(configuration, AutoMapperInitializer(), repository.Object);
+
+            return app;
+        }
+
+        private async Task<IEnumerable<Request>> GetRequestCollectionMock()
+        {
+            var requestMock = new Request("FileTest.xlsx");
+            requestMock.SetAsRegisteredItems();
+            var item1 = new RequestItem("test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test");
+            var item2 = new RequestItem("test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test");
+            requestMock.AddItem(item1);
+            requestMock.AddItem(item2);
+            var list = new List<Request>();
+            list.Add(requestMock);
+            return list;
+        }
+
         public string GetConfiguration(string configurationKey)
         {
             string appSetting = Directory.GetCurrentDirectory() + @"\appsettings.Test.json";
@@ -28,6 +63,17 @@ namespace Syngenta.Sintegra.Application.Tests
                         .Build();
 
             return configuration[configurationKey];
+        }
+
+        public InputFilesApplication GetInputFilesApplication()
+        {
+            var configuration = GetConfiguration();
+
+            var repository = new Mock<IRequestRepository>();
+
+            var app = new InputFilesApplication(configuration, AutoMapperInitializer(), repository.Object);
+
+            return app;
         }
         public IMapper AutoMapperInitializer()
         {

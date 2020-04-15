@@ -1,4 +1,5 @@
 using Moq;
+using Syngenta.Common.Data;
 using Syngenta.Common.Office;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.InputFiles.Models;
@@ -39,7 +40,7 @@ namespace Syngenta.Sintegra.Application.Tests
         {
             // Arrange  
 
-            InputFilesApplication app = GetApplication();
+            InputFilesApplication app = _applicationTestsFixture.GetInputFilesApplication();
 
             // Act
             List<string> filesList = app.GetAllFilesInInputFolder().Result;
@@ -49,28 +50,19 @@ namespace Syngenta.Sintegra.Application.Tests
             Assert.Contains("CustomesDataTests.xlsx", filesList[0]);
         }
 
-        private InputFilesApplication GetApplication()
-        {
-            var configuration = _applicationTestsFixture.GetConfiguration();
-            var _repository = new Mock<IRequestRepository>();
-
-            var app = new InputFilesApplication(configuration, _applicationTestsFixture.AutoMapperInitializer(), _repository.Object);
-            return app;
-        }
-
         [Fact(DisplayName = "Import Customers from Excel Files")]
         [Trait("Category", "Excel - Import Data")]
         public void ShouldImportCurstomersFromExcelFiles()
         {
             // Arrange            
-            InputFilesApplication app = GetApplication();
+            InputFilesApplication app = _applicationTestsFixture.GetInputFilesApplication();
 
             // Act
             List<Request> requests = app.ImportCurstomersFromExcelFiles().Result;
 
             // Assert
             Assert.Single(requests);
-            Assert.Equal(RequestStatus.Draft, requests.FirstOrDefault().RequestStatus);
+            Assert.Equal(RequestStatus.RegisteredItems, requests.FirstOrDefault().RequestStatus);
             Assert.Equal(14244, requests.FirstOrDefault().RequestItems.Count);
         }
 

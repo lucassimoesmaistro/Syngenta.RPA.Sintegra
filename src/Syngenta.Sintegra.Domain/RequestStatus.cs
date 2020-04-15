@@ -7,10 +7,11 @@ namespace Syngenta.Sintegra.Domain
     public enum RequestStatus
     {
         Draft = 0,
-        RegisteredItems = 1,
-        Processing = 2,
-        Processed = 3,
-        PartiallyProcessed = 4,
-        CommunicationFailure = 10
+
+        RegisteredItems = 5,
+        
+        Processed = 10,
+
+        CommunicationFailure = 15
     }
 }

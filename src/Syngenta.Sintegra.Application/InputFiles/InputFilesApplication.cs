@@ -59,8 +59,9 @@ namespace Syngenta.Sintegra.Application.InputFiles
                         var item = _mapper.Map<RequestItem>(customer);
                         request.AddItem(item);
                     });
+                    request.SetAsRegisteredItems();
                     _repository.Add(request);
-                    var retorno = _repository.UnitOfWork.Commit().Result;
+                    var retorno = _repository.UnitOfWork?.Commit().Result;
                     requests.Add(request);
                 });
                 return requests;

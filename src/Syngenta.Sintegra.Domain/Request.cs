@@ -50,6 +50,11 @@ namespace Syngenta.Sintegra.Domain
 
             _requestItems.Add(item);
         }
+
+        public void SetAsRegisteredItems()
+        {
+            RequestStatus = RequestStatus.RegisteredItems;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.Domain;
 using System;
 using System.Collections.Generic;
@@ -153,22 +154,42 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
             int maxParallelRequests = 3;
             requestsToVerify.ToList().ForEach(request =>
             {
-                List<RequestItem> list = request.RequestItems.ToList();
+                bool allRequestItemsOk = true;
+                List<RequestItem> list = request.RequestItems.Where(w=>w.RequestItemStatus != RequestItemStatus.Checked).ToList();
                 for (int i = 0; i < list.Count; i = i + maxParallelRequests)
                 {
                     var items = list.Skip(i).Take(maxParallelRequests).ToList();
                     Parallel.ForEach(items, item =>
                     {
+                        SintegraNacionalResponseDTO response;
                         Customer customer;
+
                         if (!string.IsNullOrEmpty(item.CustomerCNPJ))
-                            customer = _sintegraFacade.GetDataByCnpj(item.CustomerCNPJ, item.CustomerRegion).Result;
+                            response = _sintegraFacade.GetDataByCnpj(item.CustomerCNPJ, item.CustomerRegion).Result;
                         else
-                            customer = _sintegraFacade.GetDataByCpf(item.CustomerCPF, item.CustomerRegion).Result;
+                            response = _sintegraFacade.GetDataByCpf(item.CustomerCPF, item.CustomerRegion).Result;
 
-                        VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
+                        if (SintegraResponseOK(response))
+                        {
+                            customer = ConvertToCustomer(response);
+                            VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
+                            item.SetStatusChecked();
+                        }
+                        else
+                        {
+                            allRequestItemsOk = false;
+                            item.SetStatusCommunicationFailure();
+                        }
 
+                        _repository.AtualizarItem(item);
                     });
-                }                
+                }
+
+                if (allRequestItemsOk)
+                    request.SetAsProcessed();
+
+
+                _repository.Update(request);
 
                 result = _repository.UnitOfWork.Commit().Result;
             });
@@ -177,5 +198,16 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
             return result;
         }
 
+        private Customer ConvertToCustomer(SintegraNacionalResponseDTO response)
+        {
+            return _mapper.Map<Customer>(response.Response.Output.FirstOrDefault());
+        }
+
+        private static bool SintegraResponseOK(SintegraNacionalResponseDTO sintegraResponse)
+        {
+            return sintegraResponse.Response.Status.Code == 200 &&
+                                        sintegraResponse.Response.Output != null &&
+                                        sintegraResponse.Response.Output.Count > 0;
+        }
     }
 }

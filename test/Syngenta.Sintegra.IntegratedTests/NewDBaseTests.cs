@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
+using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.AntiCorruption;
-using Syngenta.Sintegra.AntiCorruption.DTO;
-using System;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -24,12 +23,14 @@ namespace Syngenta.Sintegra.IntegratedTests
             var newDBase = new NewDBaseGateway(new ConfigurationManager(configuration));
 
             // Act
-            Output result = newDBase.GetDataByCnpj("91032201000126", "RS").Result;
+            SintegraNacionalResponseDTO result = newDBase.GetDataByCnpj("91032201000126", "RS").Result;
+
 
             // Assert
+            Assert.Equal(200, result.Response.Status.Code);
             Assert.NotNull(result);
-            Assert.Equal("RS", result.sg_UFLocalizacao);
-            var cnpj = result.nr_CNPJ.ToString().Replace(".", "");
+            Assert.Equal("RS", result.Response.Output.FirstOrDefault().sg_UFLocalizacao);
+            var cnpj = result.Response.Output.FirstOrDefault().nr_CNPJ.ToString().Replace(".", "");
             cnpj = cnpj.Replace("-", "");
             cnpj = cnpj.Replace("/", "");
             Assert.Equal("91032201000126", cnpj);
@@ -48,11 +49,16 @@ namespace Syngenta.Sintegra.IntegratedTests
             var newDBase = new NewDBaseGateway(new ConfigurationManager(configuration));
 
             // Act
-            var result = newDBase.GetDataByCpf("14321092949", "MT").Result;
+            SintegraNacionalResponseDTO result = newDBase.GetDataByCpf("14321092949", "MT").Result;
 
             // Assert
+            Assert.Equal(200, result.Response.Status.Code);
             Assert.NotNull(result);
-            Assert.Equal("MT", result.sg_UFLocalizacao);
+            Assert.Equal("MT", result.Response.Output.FirstOrDefault().sg_UFLocalizacao);
+            var cpf = result.Response.Output.FirstOrDefault().nr_CNPJ.ToString().Replace(".", "");
+            cpf = cpf.Replace("-", "");
+            cpf = cpf.Replace("/", "");
+            Assert.Equal("14321092949", cpf);
         }
     }
 }

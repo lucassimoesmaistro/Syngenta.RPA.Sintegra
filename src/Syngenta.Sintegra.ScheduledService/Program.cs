@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Syngenta.Sintegra.AntiCorruption.AutoMapper;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.SintegraComunication;
 using Syngenta.Sintegra.Bootstrapper;
 using Syngenta.Sintegra.Repository;
 using System;
-using System.Threading.Tasks;
 
 namespace Syngenta.Sintegra.ScheduledService
 {

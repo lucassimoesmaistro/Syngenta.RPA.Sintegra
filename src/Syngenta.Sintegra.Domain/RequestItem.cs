@@ -44,6 +44,11 @@ namespace Syngenta.Sintegra.Domain
             _changeLogs = new List<ChangeLog>();
         }
 
+        internal void SetStatusRegistred()
+        {
+            RequestItemStatus = RequestItemStatus.Registered;
+        }
+
         protected RequestItem()
         {
             _changeLogs = new List<ChangeLog>();
@@ -51,6 +56,16 @@ namespace Syngenta.Sintegra.Domain
         internal void ConnectToRequest(Guid requestId)
         {
             RequestId = requestId;
+        }
+
+        public void SetStatusChecked()
+        {
+            RequestItemStatus = RequestItemStatus.Checked;
+        }
+
+        public void SetStatusCommunicationFailure()
+        {
+            RequestItemStatus = RequestItemStatus.CommunicationFailure;
         }
     }
 }

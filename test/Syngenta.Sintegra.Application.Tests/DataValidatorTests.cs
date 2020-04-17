@@ -48,19 +48,20 @@ namespace Syngenta.Sintegra.Application.Tests
         {
             // Arrange        
             _mocker.GetMock<IRequestRepository>().Setup(r => r.UnitOfWork.Commit()).Returns(Task.FromResult(true));
+
             _mocker.GetMock<IRequestRepository>()
                 .Setup(r => r.GetAllRequestsWithRegisteredItems()).Returns(_applicationTestsFixture.GetRequestCollectionMock());
+
             _mocker.GetMock<ISintegraFacade>()
                 .Setup(r => r.GetDataByCnpj(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(_applicationTestsFixture.GetCustomerMockCnpj());
+                .Returns(_applicationTestsFixture.GetSintegraDTOMockCnpj());
+
             _mocker.GetMock<ISintegraFacade>()
                 .Setup(r => r.GetDataByCpf(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(_applicationTestsFixture.GetCustomerMockCpf());
-
+                .Returns(_applicationTestsFixture.GetSintegraDTOMockCpf());
 
             // Act
             var result = _dataValidatorApp.GetAllNewRequestsAndVerify().Result;
-
 
             // Assert
             Assert.True(result);

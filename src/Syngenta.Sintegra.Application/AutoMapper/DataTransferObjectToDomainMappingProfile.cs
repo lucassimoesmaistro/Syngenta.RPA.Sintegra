@@ -1,11 +1,12 @@
-﻿using AutoMapper;
-using Syngenta.Sintegra.AntiCorruption.DTO;
+﻿
+using AutoMapper;
+using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Syngenta.Sintegra.AntiCorruption.AutoMapper
+namespace Syngenta.Sintegra.Application.AutoMapper
 {
     public class DataTransferObjectToDomainMappingProfile : Profile
     {

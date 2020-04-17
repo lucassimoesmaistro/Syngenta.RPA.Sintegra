@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Syngenta.Sintegra.AntiCorruption.DTO
+namespace Syngenta.Common.DomainObjects.DTO
 {
     public class SintegraNacionalResponseDTO
     {

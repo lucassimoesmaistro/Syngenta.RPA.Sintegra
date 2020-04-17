@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.SintegraComunication;
@@ -53,11 +54,11 @@ namespace Syngenta.Sintegra.Application.Tests
 
             var sintegraWebService = new Mock<ISintegraFacade>();
 
-            sintegraWebService.Setup(x => x.GetDataByCnpj(customerCnpj.CustomerCNPJ, customerCnpj.CustomerRegion))
-                          .Returns(Task.Run(() => GetCustomerMockCnpj()));
+            //sintegraWebService.Setup(x => x.GetDataByCnpj(customerCnpj.CustomerCNPJ, customerCnpj.CustomerRegion))
+            //              .Returns(Task.Run(() => GetCustomerMockCnpj()));
 
-            sintegraWebService.Setup(x => x.GetDataByCpf(customerCnpj.CustomerCNPJ, customerCnpj.CustomerRegion))
-                          .Returns(Task.Run(() => GetCustomerMockCpf()));
+            //sintegraWebService.Setup(x => x.GetDataByCpf(customerCnpj.CustomerCNPJ, customerCnpj.CustomerRegion))
+            //              .Returns(Task.Run(() => GetCustomerMockCpf()));
 
             var app = new DataValidatorApplication(AutoMapperInitializer(), repository.Object, sintegraWebService.Object);
 
@@ -75,6 +76,64 @@ namespace Syngenta.Sintegra.Application.Tests
         {
             return await Task.Run(() =>
                 new Customer("HEINZ BRASIL S.A.", "RODOVIA GO 080", "SN", "ZONA RURAL", "75460000", string.Empty, string.Empty, "GO", "50.955.707/0004-72", string.Empty, "101884427")
+            );
+        }
+
+
+
+        public async Task<SintegraNacionalResponseDTO> GetSintegraDTOMockCpf()
+        {
+            return await Task.Run(() =>
+                   new SintegraNacionalResponseDTO
+                   {
+                       Response = new Response
+                       {
+                           Status = new Status { Code = 200 },
+                           Output = new List<Output>
+                           {
+                            new Output
+                            {
+                                nm_Empresa = "ORLANDO POLATO E OUTRO",
+                                ds_Logradouro = "BR 364 KM + 118 + 6 KM A ESQUERDA",
+                                nr_Logradouro = "SN",
+                                nm_Bairro = "ZONA RURAL",
+                                nr_CEP = "78795000",
+                                nm_Municipio = string.Empty,
+                                sg_UFLocalizacao = "MT",
+                                nr_CNPJ = string.Empty,
+                                nr_InscricaoEstadual = "132839717"
+                            }
+                           }
+                       }
+                   }
+               );
+        }
+
+        public async Task<SintegraNacionalResponseDTO> GetSintegraDTOMockCnpj()
+        {
+            return await Task.Run(() =>
+                new SintegraNacionalResponseDTO
+                {
+                    Response = new Response
+                    {
+                        Status = new Status { Code = 200 },
+                        Output = new List<Output>
+                        {
+                            new Output
+                            {
+                                nm_Empresa = "HEINZ BRASIL S.A.",
+                                ds_Logradouro = "RODOVIA GO 080",
+                                nr_Logradouro = "SN",
+                                nm_Bairro = "ZONA RURAL",
+                                nr_CEP = "75460000",
+                                nm_Municipio = string.Empty,
+                                sg_UFLocalizacao = "GO",
+                                nr_CNPJ = "50.955.707/0004-72",
+                                nr_InscricaoEstadual = "101884427"
+                            }
+                        }
+                    }
+                }
             );
         }
 

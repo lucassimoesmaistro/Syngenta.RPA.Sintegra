@@ -28,6 +28,11 @@ namespace Syngenta.Sintegra.Repository.Repository
             _db.ChangeLogs.Add(changeLog);
         }
 
+        public void AtualizarItem(RequestItem item)
+        {
+            _db.RequestItems.Update(item);
+        }
+
         public void Dispose()
         {
             _db?.Dispose();
@@ -37,9 +42,15 @@ namespace Syngenta.Sintegra.Repository.Repository
 //            var sql = _db.RequestVerification.Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems)).ToSql();
             return await _db.RequestVerification
                 .Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems))
-                .Include(i=>i.RequestItems)
+                .Include(i => i.RequestItems)
+                //.Include(i=>i.RequestItems.Where(wh=> wh.RequestItemStatus == RequestItemStatus.Registered))
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public void Update(Request request)
+        {
+            _db.RequestVerification.Update(request);
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
-using Syngenta.Sintegra.AntiCorruption.DTO;
-using System;
-using System.Linq;
+using Syngenta.Common.DomainObjects.DTO;
 using System.Threading.Tasks;
 
 namespace Syngenta.Sintegra.AntiCorruption
@@ -17,7 +15,7 @@ namespace Syngenta.Sintegra.AntiCorruption
             _configManager = configManager;
         }
 
-        public async Task<Output> GetDataByCnpj(string cnpj, string uf)
+        public async Task<SintegraNacionalResponseDTO> GetDataByCnpj(string cnpj, string uf)
         {
             return await Task.Run(() =>
             {
@@ -32,7 +30,7 @@ namespace Syngenta.Sintegra.AntiCorruption
 
         }
 
-        private async Task<Output> Request(dynamic body)
+        private async Task<SintegraNacionalResponseDTO> Request(dynamic body)
         {
             return await Task.Run(() =>
             {
@@ -64,12 +62,12 @@ namespace Syngenta.Sintegra.AntiCorruption
                     }
 
                 }
-                return responseDTO.Response.Output.FirstOrDefault();
+                return responseDTO;
             });
 
         }
 
-        public async Task<Output> GetDataByCpf(string cpf, string uf)
+        public async Task<SintegraNacionalResponseDTO> GetDataByCpf(string cpf, string uf)
         {
             return await Task.Run(() =>
             {

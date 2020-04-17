@@ -47,6 +47,7 @@ namespace Syngenta.Sintegra.Domain
         public void AddItem(RequestItem item)
         {
             item.ConnectToRequest(Id);
+            item.SetStatusRegistred();
 
             _requestItems.Add(item);
         }
@@ -54,6 +55,11 @@ namespace Syngenta.Sintegra.Domain
         public void SetAsRegisteredItems()
         {
             RequestStatus = RequestStatus.RegisteredItems;
+        }
+
+        public void SetAsProcessed()
+        {
+            RequestStatus = RequestStatus.Processed;
         }
     }
 

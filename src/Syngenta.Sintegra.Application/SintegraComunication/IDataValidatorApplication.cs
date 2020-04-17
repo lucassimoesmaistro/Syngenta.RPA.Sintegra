@@ -9,5 +9,8 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
     public interface IDataValidatorApplication : IDisposable
     {
         Task<IEnumerable<Request>> GetValidationRequestWithRegisteredItems();
+
+        Task<bool> VerifyDifferenceBetweenRequestAndSintegra();
+        Task<bool> VerifyAllRequestWithRegistredItems();
     }
 }

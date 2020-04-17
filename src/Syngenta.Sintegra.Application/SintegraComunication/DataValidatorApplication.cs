@@ -10,13 +10,11 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
 {
     public class DataValidatorApplication : IDataValidatorApplication
     {
-        private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IRequestRepository _repository;
 
-        public DataValidatorApplication(IConfiguration configuration, IMapper mapper, IRequestRepository repository)
+        public DataValidatorApplication(IMapper mapper, IRequestRepository repository)
         {
-            _configuration = configuration;
             _mapper = mapper;
             _repository = repository;
         }

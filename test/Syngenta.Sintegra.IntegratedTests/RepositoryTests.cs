@@ -21,7 +21,7 @@ namespace Syngenta.Sintegra.IntegratedTests
         }
 
         [Fact(DisplayName = "Get Validation Request With Registered Items")]
-        [Trait("Category", "Repository")]
+        [Trait("Integrated Tests", "Repository")]
         public void ShouldGetValidationRequestWithRegisteredItems()
         {
             // Arrange            

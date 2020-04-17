@@ -21,7 +21,7 @@ namespace Syngenta.Sintegra.Application.Tests
         }
 
         [Fact(DisplayName = "Read Excel File")]
-        [Trait("Category", "Excel - Read Excel File")]
+        [Trait("Unit Tests", "Excel - Read Excel File")]
         public void ShouldReadExcelFile()
         {       
             // Arrange            
@@ -35,7 +35,7 @@ namespace Syngenta.Sintegra.Application.Tests
         }
 
         [Fact(DisplayName = "Get Files To Import")]
-        [Trait("Category", "Excel - Import Data")]
+        [Trait("Unit Tests", "Excel - Import Data")]
         public void ShouldGetFilesToImport()
         {
             // Arrange  
@@ -51,7 +51,7 @@ namespace Syngenta.Sintegra.Application.Tests
         }
 
         [Fact(DisplayName = "Import Customers from Excel Files")]
-        [Trait("Category", "Excel - Import Data")]
+        [Trait("Unit Tests", "Excel - Import Data")]
         public void ShouldImportCurstomersFromExcelFiles()
         {
             // Arrange            

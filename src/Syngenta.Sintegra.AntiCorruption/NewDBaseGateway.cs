@@ -3,6 +3,8 @@ using RestSharp;
 using RestSharp.Authenticators;
 using Syngenta.Sintegra.AntiCorruption.DTO;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Syngenta.Sintegra.AntiCorruption
 {
@@ -15,60 +17,70 @@ namespace Syngenta.Sintegra.AntiCorruption
             _configManager = configManager;
         }
 
-        public SintegraNacionalResponseDTO GetDataByCnpj(string cnpj, string uf)
+        public async Task<Output> GetDataByCnpj(string cnpj, string uf)
         {
-            var body = new
+            return await Task.Run(() =>
             {
-                nr_CNPJ = cnpj,
-                sg_UF = uf
-            };
+                var body = new
+                {
+                    nr_CNPJ = cnpj,
+                    sg_UF = uf
+                };
 
-            return Request(body);
+                return Request(body);
+            });
 
         }
 
-        private SintegraNacionalResponseDTO Request(dynamic body)
+        private async Task<Output> Request(dynamic body)
         {
-            var endpoint = _configManager.GetValue("SintegraWebService:Endpoint");
-            var user = _configManager.GetValue("SintegraWebService:User");
-            var password = _configManager.GetValue("SintegraWebService:Password");
-
-            var client = new RestClient($"https://{endpoint}/api/153da7cb");
-            client.Timeout = -1;
-            client.Authenticator = new NtlmAuthenticator(user, password);
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Cookie", "X-UAId=140; xpi-id=kbcZaYzHe5tOpjluZCQC; xpi-pid=BZH4Sz4Qd9TXNLisCzQZ");
-
-            request.AddParameter("application/json", JsonConvert.SerializeObject(body), ParameterType.RequestBody);
-
-            IRestResponse response = client.Execute(request);
-            SintegraNacionalResponseDTO responseDTO = new SintegraNacionalResponseDTO { Response = new Response { Status = new Status { Code = 400 } } };
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            return await Task.Run(() =>
             {
+                var endpoint = _configManager.GetValue("SintegraWebService:Endpoint");
+                var user = _configManager.GetValue("SintegraWebService:User");
+                var password = _configManager.GetValue("SintegraWebService:Password");
 
-                try
-                {
-                    responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
-                }
-                catch
-                {
-                    responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
-                }
+                var client = new RestClient($"https://{user}:{password}@{endpoint}/api/153da7cb");
+                //client.Timeout = -1;
+                client.Authenticator = new NtlmAuthenticator(user, password);
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Cookie", "X-UAId=140; xpi-id=kbcZaYzHe5tOpjluZCQC; xpi-pid=BZH4Sz4Qd9TXNLisCzQZ");
 
-            }
-            return responseDTO;
+                request.AddParameter("application/json", JsonConvert.SerializeObject(body), ParameterType.RequestBody);
+
+                IRestResponse response = client.Execute(request);
+                SintegraNacionalResponseDTO responseDTO = new SintegraNacionalResponseDTO { Response = new Response { Status = new Status { Code = 400 } } };
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+
+                    try
+                    {
+                        responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
+                    }
+                    catch
+                    {
+                        responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
+                    }
+
+                }
+                return responseDTO.Response.Output.FirstOrDefault();
+            });
+
         }
 
-        public SintegraNacionalResponseDTO GetDataByCpf(string cpf, string uf)
+        public async Task<Output> GetDataByCpf(string cpf, string uf)
         {
-            var body = new
+            return await Task.Run(() =>
             {
-                nr_CPF = cpf,
-                sg_UF = uf
-            };
+                var body = new
+                {
+                    nr_CPF = cpf,
+                    sg_UF = uf
+                };
 
-            return Request(body);
+                return Request(body);
+            });
         }
     }
 }

@@ -27,9 +27,10 @@ namespace Syngenta.Sintegra.Domain
 
         public Request Request { get; set; }
         
-        public RequestItem(string customerId, string customerStreet, string customerHouseNumber, string customerDistrict, string customerPostalCode, string customerCity, string customerCountry, string customerRegion, string customerCNPJ, string customerCPF, string customerInscricaoEstadual)
+        public RequestItem(string customerId, string customerName, string customerStreet, string customerHouseNumber, string customerDistrict, string customerPostalCode, string customerCity, string customerCountry, string customerRegion, string customerCNPJ, string customerCPF, string customerInscricaoEstadual)
         {
             CustomerId = customerId;
+            CustomerName = customerName;
             CustomerStreet = customerStreet;
             CustomerHouseNumber = customerHouseNumber;
             CustomerDistrict = customerDistrict;

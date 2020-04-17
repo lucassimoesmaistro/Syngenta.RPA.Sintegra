@@ -13,7 +13,7 @@ namespace Syngenta.Sintegra.Application.AutoMapper
         {
             CreateMap<CustomersColletionModel, RequestItem>()
                 .ConstructUsing(c =>
-                    new RequestItem(c.CustomerId, c.Street, c.HouseNumber, c.District, c.PostalCode, c.City, c.Country, c.Region, c.CNPJ, c.CPF, c.InscricaoEstadual));
+                    new RequestItem(c.CustomerId, c.Name, c.Street, c.HouseNumber, c.District, c.PostalCode, c.City, c.Country, c.Region, c.CNPJ, c.CPF, c.InscricaoEstadual));
         }
     }
 }

@@ -150,20 +150,25 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
         {
             var requestsToVerify = await _repository.GetAllRequestsWithRegisteredItems();
             bool result = false;
-
+            int maxParallelRequests = 3;
             requestsToVerify.ToList().ForEach(request =>
             {
-                Parallel.ForEach(request.RequestItems, item =>
+                List<RequestItem> list = request.RequestItems.ToList();
+                for (int i = 0; i < list.Count; i = i + maxParallelRequests)
                 {
-                    Customer customer;
-                    if (!string.IsNullOrEmpty(item.CustomerCNPJ))
-                        customer =  _sintegraFacade.GetDataByCnpj(item.CustomerCNPJ, item.CustomerRegion).Result;
-                    else
-                        customer = _sintegraFacade.GetDataByCpf(item.CustomerCPF, item.CustomerRegion).Result;
+                    var items = list.Skip(i).Take(maxParallelRequests).ToList();
+                    Parallel.ForEach(items, item =>
+                    {
+                        Customer customer;
+                        if (!string.IsNullOrEmpty(item.CustomerCNPJ))
+                            customer = _sintegraFacade.GetDataByCnpj(item.CustomerCNPJ, item.CustomerRegion).Result;
+                        else
+                            customer = _sintegraFacade.GetDataByCpf(item.CustomerCPF, item.CustomerRegion).Result;
 
-                    VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
+                        VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
 
-                });
+                    });
+                }                
 
                 result = _repository.UnitOfWork.Commit().Result;
             });

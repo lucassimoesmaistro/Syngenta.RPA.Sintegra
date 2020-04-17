@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Syngenta.Sintegra.AntiCorruption\Syngenta.Sintegra.AntiCorruption.csproj" />
+    <ProjectReference Include="..\..\src\Syngenta.Sintegra.Application\Syngenta.Sintegra.Application.csproj" />
     <ProjectReference Include="..\..\src\Syngenta.Sintegra.Repository\Syngenta.Sintegra.Repository.csproj" />
   </ItemGroup>
 

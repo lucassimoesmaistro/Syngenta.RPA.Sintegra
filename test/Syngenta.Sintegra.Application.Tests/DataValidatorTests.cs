@@ -82,10 +82,10 @@ namespace Syngenta.Sintegra.Application.Tests
             _mocker.GetMock<IRequestRepository>().Setup(r => r.AddChangeLog(It.IsAny<ChangeLog>()));
 
             // Act
-            app.VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
+            _dataValidatorApp.VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
 
             // Assert
-            _mocker.GetMock<IRequestRepository>().Verify(r => r.AddChangeLog(It.IsAny<ChangeLog>()), Times.AtLeast(4));
+            _mocker.GetMock<IRequestRepository>().Verify(r => r.AddChangeLog(It.IsAny<ChangeLog>()), Times.Exactly(4));
         }
 
     }

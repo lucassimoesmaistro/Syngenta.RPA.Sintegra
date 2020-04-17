@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Syngenta.Sintegra.AntiCorruption.AutoMapper;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.SintegraComunication;
@@ -71,7 +72,8 @@ namespace Syngenta.Sintegra.ScheduledService
                 .Build();
 
             var serviceProvider = new ServiceCollection()
-               .AddAutoMapper(typeof(ViewModelToDomainMappingProfile))
+               .AddAutoMapper(typeof(ViewModelToDomainMappingProfile),
+                              typeof(DataTransferObjectToDomainMappingProfile))
                .AddSingleton(_ => config)
                .AddSingleton<IConfiguration>(_ => config)
                .AddDbContext<CustomerContext>(options =>

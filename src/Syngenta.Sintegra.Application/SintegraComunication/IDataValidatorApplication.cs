@@ -10,7 +10,7 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
     {
         Task<IEnumerable<Request>> GetValidationRequestWithRegisteredItems();
 
-        Task<bool> VerifyDifferenceBetweenRequestAndSintegra();
-        Task<bool> VerifyAllRequestWithRegistredItems();
+        Task VerifyDifferenceBetweenRequestItemAndSintegra(RequestItem item, Customer customer);
+        Task<bool> GetAllNewRequestsAndVerify();
     }
 }

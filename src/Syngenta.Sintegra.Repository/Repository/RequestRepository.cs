@@ -23,6 +23,11 @@ namespace Syngenta.Sintegra.Repository.Repository
             _db.RequestVerification.Add(request);
         }
 
+        public void AddChangeLog(ChangeLog changeLog)
+        {
+            _db.ChangeLogs.Add(changeLog);
+        }
+
         public void Dispose()
         {
             _db?.Dispose();

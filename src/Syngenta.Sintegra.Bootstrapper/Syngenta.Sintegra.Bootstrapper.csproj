@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Syngenta.Common\Syngenta.Common.csproj" />
+    <ProjectReference Include="..\Syngenta.Sintegra.AntiCorruption\Syngenta.Sintegra.AntiCorruption.csproj" />
     <ProjectReference Include="..\Syngenta.Sintegra.Application\Syngenta.Sintegra.Application.csproj" />
     <ProjectReference Include="..\Syngenta.Sintegra.Domain\Syngenta.Sintegra.Domain.csproj" />
     <ProjectReference Include="..\Syngenta.Sintegra.Repository\Syngenta.Sintegra.Repository.csproj" />

@@ -11,5 +11,6 @@ namespace Syngenta.Sintegra.Domain
 
         void Add(Request request);
         Task<IEnumerable<Request>> GetAllRequestsWithRegisteredItems();
+        void AddChangeLog(ChangeLog changeLog);
     }
 }

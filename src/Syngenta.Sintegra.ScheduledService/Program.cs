@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
+using Syngenta.Sintegra.Application.SintegraComunication;
 using Syngenta.Sintegra.Bootstrapper;
 using Syngenta.Sintegra.Repository;
 using System;
@@ -35,7 +36,9 @@ namespace Syngenta.Sintegra.ScheduledService
             }
             else if (args[0].Equals("SintegraComunication"))
             {
-
+                var application = serviceProvider.GetService<IDataValidatorApplication>();
+                var result = application.GetAllNewRequestsAndVerify().Result;
+                Console.WriteLine(result ? "Completo" : "Incompleto");
             }
             else if (args[0].Equals("CustomerUpdate"))
             {

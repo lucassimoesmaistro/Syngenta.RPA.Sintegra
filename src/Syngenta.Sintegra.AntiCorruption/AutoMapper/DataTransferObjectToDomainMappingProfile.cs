@@ -11,9 +11,9 @@ namespace Syngenta.Sintegra.AntiCorruption.AutoMapper
     {
         public DataTransferObjectToDomainMappingProfile()
         {
-            //CreateMap<SintegraNacionalResponseDTO, Customer>()
-            //    .ConstructUsing(dto =>
-            //        new Customer(dto.Response.Output..CustomerId, c.Name, c.Street, c.HouseNumber, c.District, c.PostalCode, c.City, c.Country, c.Region, c.CNPJ, c.CPF, c.InscricaoEstadual));
+            CreateMap<Output, Customer>()
+                .ConstructUsing(dto =>
+                    new Customer(dto.nm_Empresa, dto.ds_Logradouro, dto.nr_Logradouro, dto.nm_Bairro, dto.nr_CEP, dto.nm_Municipio, "BR", dto.sg_UFLocalizacao, dto.nr_CNPJ, string.Empty, dto.nr_InscricaoEstadual));
         }
     }
 }

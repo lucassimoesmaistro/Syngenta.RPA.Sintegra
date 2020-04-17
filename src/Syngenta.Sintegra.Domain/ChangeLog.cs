@@ -21,7 +21,7 @@ namespace Syngenta.Sintegra.Domain
 
         protected ChangeLog() { }
 
-        internal void ConnectToRequestItem(Guid requestItemId)
+        public void ConnectToRequestItem(Guid requestItemId)
         {
             RequestItemId = requestItemId;
         }

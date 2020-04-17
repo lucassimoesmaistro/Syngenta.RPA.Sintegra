@@ -33,6 +33,7 @@ namespace Syngenta.Sintegra.Application.Tests
         {
             var configuration = GetConfiguration();
 
+
             var repository = new Mock<IRequestRepository>();
 
             repository.Setup(x => x.GetAllRequestsWithRegisteredItems())
@@ -58,26 +59,26 @@ namespace Syngenta.Sintegra.Application.Tests
             sintegraWebService.Setup(x => x.GetDataByCpf(customerCnpj.CustomerCNPJ, customerCnpj.CustomerRegion))
                           .Returns(Task.Run(() => GetCustomerMockCpf()));
 
-            var app = new DataValidatorApplication(AutoMapperInitializer(), repository.Object);
+            var app = new DataValidatorApplication(AutoMapperInitializer(), repository.Object, sintegraWebService.Object);
 
             return app;
         }
 
-        private async Task<Customer> GetCustomerMockCpf()
+        public async Task<Customer> GetCustomerMockCpf()
         {
             return await Task.Run(() =>
-                new Customer("ORLANDO POLATO E OUTRO", "BR 364 KM MAIS 118", "S/N", "ZN RURAL", "78795-000", "PEDRA PRETA", "BR", "MT", string.Empty, "14321092949", "132839717")
+                new Customer("ORLANDO POLATO E OUTRO", "BR 364 KM + 118 + 6 KM A ESQUERDA", "SN", "ZONA RURAL", "78795000", string.Empty, string.Empty, "MT", string.Empty, string.Empty, "132839717")
             );
         }
 
-        private async Task<Customer> GetCustomerMockCnpj()
+        public async Task<Customer> GetCustomerMockCnpj()
         {
             return await Task.Run(() =>
-                new Customer("HEINZ BRASIL SA", "RDV GO 080", "S/N", "ZN RURAL", "75460-000", "NEROPOLIS", "BR", "GO", "50955707000472", string.Empty, "101884427")
+                new Customer("HEINZ BRASIL S.A.", "RODOVIA GO 080", "SN", "ZONA RURAL", "75460000", string.Empty, string.Empty, "GO", "50.955.707/0004-72", string.Empty, "101884427")
             );
         }
 
-        private async Task<IEnumerable<Request>> GetRequestCollectionMock()
+        public async Task<IEnumerable<Request>> GetRequestCollectionMock()
         {
             return await Task.Run(() =>
             {
@@ -95,6 +96,16 @@ namespace Syngenta.Sintegra.Application.Tests
 
             });
         }
+        public async Task<RequestItem> GetRequestItemCnpjMock()
+        {
+            return await Task.Run(() => new RequestItem("10433438", "HEINZ BRASIL SA", "RDV GO 080", "S/N", "ZN RURAL", "75460-000", "NEROPOLIS", "BR", "GO", "50955707000472", string.Empty, "101884427"));
+        }
+
+        public async Task<RequestItem> GetRequestItemCpfMock()
+        {
+            return await Task.Run(() => new RequestItem("10433481", "ORLANDO POLATO E OUTRO", "BR 364 KM MAIS 118", "S/N", "ZN RURAL", "78795-000", "PEDRA PRETA", "BR", "MT", string.Empty, "14321092949", "132839717"));
+        }
+
 
         public string GetConfiguration(string configurationKey)
         {

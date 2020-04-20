@@ -15,9 +15,10 @@ using System;
 namespace Syngenta.Sintegra.ScheduledService
 {
     //dotnet publish -r win10-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
-    //Syngenta.Sintegra.ScheduledService.exe Development InputFilesApplication
-    //Syngenta.Sintegra.ScheduledService.exe Development DataValidatorApplication
-    //Syngenta.Sintegra.ScheduledService.exe Development OutputFilesApplication
+    //dotnet publish -r win10-x64 -c Release /p:PublishTrimmed=true
+    //Syngenta.Sintegra.ScheduledService.exe UAT InputFilesApplication
+    //Syngenta.Sintegra.ScheduledService.exe UAT DataValidatorApplication
+    //Syngenta.Sintegra.ScheduledService.exe UAT OutputFilesApplication
     public class Program
     {
         public static void Main(string[] args)
@@ -73,7 +74,7 @@ namespace Syngenta.Sintegra.ScheduledService
             if (environment.Equals("Production"))
                 appsettings = "appsettings.json";
             else
-                appsettings = "appsettings.Development.json";
+                appsettings = $"appsettings.{args[0]}.json";
 
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\" + System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.Name, "");
 

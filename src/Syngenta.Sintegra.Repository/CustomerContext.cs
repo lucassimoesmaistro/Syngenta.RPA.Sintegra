@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Syngenta.Common.Data;
+using Syngenta.Common.Log;
 using Syngenta.Sintegra.Domain;
 using System;
 using System.Collections.Generic;
@@ -20,20 +21,29 @@ namespace Syngenta.Sintegra.Repository
 
         public async Task<bool> Commit()
         {
-            foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("Timestamp") != null))
+            try
             {
-                if (entry.State == EntityState.Added)
+                foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("Timestamp") != null))
                 {
-                    entry.Property("Timestamp").CurrentValue = DateTime.Now;
+                    if (entry.State == EntityState.Added)
+                    {
+                        entry.Property("Timestamp").CurrentValue = DateTime.Now;
+                    }
+
+                    if (entry.State == EntityState.Modified)
+                    {
+                        entry.Property("Timestamp").IsModified = false;
+                    }
                 }
 
-                if (entry.State == EntityState.Modified)
-                {
-                    entry.Property("Timestamp").IsModified = false;
-                }
+                return await base.SaveChangesAsync() > 0;
             }
-
-            return await base.SaveChangesAsync() > 0;
+            catch (Exception e)
+            {
+                Logger.Logar.Error(e, $"Commit");
+                return false;
+            }
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -5,20 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Syngenta.Common.Log;
 using System.Linq;
+using Syngenta.Common.Office;
+using System.Collections.Generic;
+using Syngenta.Sintegra.Application.OutputFiles.Models;
+using AutoMapper;
 
 namespace Syngenta.Sintegra.Application.OutputFiles
 {
     public class OutputFilesApplication : IOutputFilesApplication
     {
         private readonly IRequestRepository _repository;
+        private readonly IMapper _mapper;
         public IConfiguration Configuration { get; }
 
         private readonly string _filesPath;
 
         public OutputFilesApplication(IConfiguration configuration,
-                                 IRequestRepository repository)
+                                      IMapper mapper,
+                                      IRequestRepository repository)
         {
             _filesPath = configuration["FilesPath:ProcessedFiles"];
+            _mapper = mapper;
             _repository = repository;
         }
 
@@ -41,12 +48,11 @@ namespace Syngenta.Sintegra.Application.OutputFiles
                 {
                     Logger.Logar.Information($"request: {request.Id.ToString()}");
                     bool allRequestItemsOk = true;
-                    
+
+                    List<OutputFileColumns> list = _mapper.Map<List<OutputFileColumns>>(request.RequestItems);
 
                     //TODO: Create Excel File
-
-                    //TODO: Delete Origial File
-
+                    var file = ExcelExtensions.Create<OutputFileColumns>(_filesPath, $"NewFile{DateTime.Now.ToString("yyyyMMddHHmmss")}", "teste", list);
 
                     if (allRequestItemsOk)
                         request.SetAsOutputFileGenerated();

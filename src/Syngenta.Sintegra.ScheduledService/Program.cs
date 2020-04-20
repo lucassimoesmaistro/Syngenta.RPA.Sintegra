@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Syngenta.Common.Log;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
+using Syngenta.Sintegra.Application.OutputFiles;
 using Syngenta.Sintegra.Application.SintegraComunication;
 using Syngenta.Sintegra.Bootstrapper;
 using Syngenta.Sintegra.Repository;
@@ -16,6 +17,7 @@ namespace Syngenta.Sintegra.ScheduledService
     //dotnet publish -r win10-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
     //Syngenta.Sintegra.ScheduledService.exe Development InputFilesApplication
     //Syngenta.Sintegra.ScheduledService.exe Development DataValidatorApplication
+    //Syngenta.Sintegra.ScheduledService.exe Development OutputFilesApplication
     public class Program
     {
         public static void Main(string[] args)
@@ -54,6 +56,9 @@ namespace Syngenta.Sintegra.ScheduledService
             {
                 Logger.Logar.Information("Initializing Output Files Process");
 
+                var application = serviceProvider.GetService<IOutputFilesApplication>();
+                var result = application.GetAllProcessed().Result;
+                Logger.Logar.Information(result ? "Completo" : "Incompleto");
             }
 
 
@@ -78,8 +83,9 @@ namespace Syngenta.Sintegra.ScheduledService
                 .Build();
 
             var serviceProvider = new ServiceCollection()
-               .AddAutoMapper(typeof(ViewModelToDomainMappingProfile),
-                              typeof(DataTransferObjectToDomainMappingProfile))
+               .AddAutoMapper(typeof(ModelToDomainMappingProfile),
+                              typeof(DataTransferObjectToDomainMappingProfile),
+                              typeof(DomainToModelMappingProfile))
                .AddSingleton(_ => config)
                .AddSingleton<IConfiguration>(_ => config)
                .AddDbContext<CustomerContext>(options =>

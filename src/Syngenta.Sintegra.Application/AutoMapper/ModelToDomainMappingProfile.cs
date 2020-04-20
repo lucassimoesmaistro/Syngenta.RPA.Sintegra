@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Syngenta.Sintegra.Application.AutoMapper
 {
-    public class ViewModelToDomainMappingProfile : Profile
+    public class ModelToDomainMappingProfile : Profile
     {
-        public ViewModelToDomainMappingProfile()
+        public ModelToDomainMappingProfile()
         {
             CreateMap<CustomersColletionModel, RequestItem>()
                 .ConstructUsing(c =>

@@ -190,7 +190,7 @@ namespace Syngenta.Sintegra.Application.Tests
         {
             var mockMapper = new MapperConfiguration(x =>
             {
-                x.AddProfile<ViewModelToDomainMappingProfile>();
+                x.AddProfile<ModelToDomainMappingProfile>();
             });
             var mapper = mockMapper.CreateMapper();
             return mapper;

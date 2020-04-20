@@ -1,4 +1,5 @@
-﻿using Syngenta.Sintegra.Domain;
+﻿using Syngenta.Common.DomainObjects.DTO;
+using Syngenta.Sintegra.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
 
         Task VerifyDifferenceBetweenRequestItemAndSintegra(RequestItem item, Customer customer);
         Task<bool> GetAllNewRequestsAndVerify();
+
     }
 }

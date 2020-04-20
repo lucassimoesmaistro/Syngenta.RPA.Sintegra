@@ -12,6 +12,8 @@ namespace Syngenta.Sintegra.Domain
         
         Processed = 10,
 
-        CommunicationFailure = 15
+        CommunicationFailure = 15,
+
+        OutputFileGenerated = 20
     }
 }

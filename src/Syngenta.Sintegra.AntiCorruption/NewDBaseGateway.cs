@@ -2,6 +2,7 @@
 using RestSharp;
 using RestSharp.Authenticators;
 using Syngenta.Common.DomainObjects.DTO;
+using Syngenta.Common.Log;
 using System.Threading.Tasks;
 
 namespace Syngenta.Sintegra.AntiCorruption
@@ -34,6 +35,9 @@ namespace Syngenta.Sintegra.AntiCorruption
         {
             return await Task.Run(() =>
             {
+
+                Logger.Logar.Information($"SintegraNacionalResponseDTO: {JsonConvert.SerializeObject(body)}");
+                
                 var endpoint = _configManager.GetValue("SintegraWebService:Endpoint");
                 var user = _configManager.GetValue("SintegraWebService:User");
                 var password = _configManager.GetValue("SintegraWebService:Password");
@@ -51,16 +55,8 @@ namespace Syngenta.Sintegra.AntiCorruption
                 SintegraNacionalResponseDTO responseDTO = new SintegraNacionalResponseDTO { Response = new Response { Status = new Status { Code = 400 } } };
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-
-                    try
-                    {
-                        responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
-                    }
-                    catch
-                    {
-                        responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
-                    }
-
+                    Logger.Logar.Information($"SintegraNacionalResponseDTO: {response.Content}");
+                    responseDTO = JsonConvert.DeserializeObject<SintegraNacionalResponseDTO>(response.Content);
                 }
                 return responseDTO;
             });

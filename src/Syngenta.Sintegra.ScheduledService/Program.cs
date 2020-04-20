@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Syngenta.Common.Log;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.SintegraComunication;
@@ -13,38 +14,45 @@ using System;
 namespace Syngenta.Sintegra.ScheduledService
 {
     //dotnet publish -r win10-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
+    //Syngenta.Sintegra.ScheduledService.exe Development InputFilesApplication
+    //Syngenta.Sintegra.ScheduledService.exe Development DataValidatorApplication
     public class Program
     {
         public static void Main(string[] args)
         {
-            ServiceProvider serviceProvider = Startup(args);
-            if (args.Length == 0)
+            if (args.Length < 2)
             {
                 Console.WriteLine($"**********Invalid Command**********");
+                Console.ReadKey();
                 return;
             }
+            ServiceProvider serviceProvider = Startup(args);
 
-            Console.WriteLine($"Arguments: {args[0]}");
-            
-            if (args[0].Equals("InputFiles"))
+            Logger.Logar.Information($"Arguments: {args[1]}");
+
+            if (args[1].Equals("InputFilesApplication"))
             {
+                Logger.Logar.Information("Initializing Input Files Process");
                 var application = serviceProvider.GetService<IInputFilesApplication>();
                 var result = application.ImportCurstomersFromExcelFiles().Result;
-                result.ForEach(f => Console.WriteLine(f.FileName));
+                result.ForEach(f => Logger.Logar.Information(f.FileName));
                 
             }
-            else if (args[0].Equals("SintegraComunication"))
+            else if (args[1].Equals("DataValidatorApplication"))
             {
+                Logger.Logar.Information("Initializing Sintegra Comunication");
                 var application = serviceProvider.GetService<IDataValidatorApplication>();
                 var result = application.GetAllNewRequestsAndVerify().Result;
-                Console.WriteLine(result ? "Completo" : "Incompleto");
+                Logger.Logar.Information(result ? "Completo" : "Incompleto");
             }
-            else if (args[0].Equals("CustomerUpdate"))
+            else if (args[1].Equals("CustomerUpdate"))
             {
+                Logger.Logar.Information("Initializing Customer Update");
 
             }
-            else if (args[0].Equals("OutputFiles"))
+            else if (args[1].Equals("OutputFilesApplication"))
             {
+                Logger.Logar.Information("Initializing Output Files Process");
 
             }
 
@@ -53,7 +61,7 @@ namespace Syngenta.Sintegra.ScheduledService
 
         private static ServiceProvider Startup(string[] args)
         {
-            string environment = args.Length == 0 ? "Production" : args[0];
+            string environment = args.Length == 1 ? "Production" : args[0];
 
             string appsettings = "";
 
@@ -81,6 +89,7 @@ namespace Syngenta.Sintegra.ScheduledService
                .AddAntiCorruptionLayer()
                .AddDomain()
                .AddApplication()
+               .AddLog($"Syngenta.Sintegra.ScheduledService.{args[1].ToString()}", config["FilesPath:LogFiles"])
                .BuildServiceProvider();
             return serviceProvider;
         }

@@ -8,9 +8,9 @@ namespace Syngenta.Common.Log
     {
         public static Serilog.ILogger Logar;
 
-        public Base(string applicationName)
+        public Base(string applicationName, string logFilesFolder)
         {
-            string nomeArquivoLog = $"../Logs/{DateTime.Now.ToString("yyyyMMddHHmmss")}_{applicationName.Replace(".", "_")}.log";
+            string nomeArquivoLog = $"{logFilesFolder}/{applicationName.Replace(".", "_")}.log";
             Logar = new LoggerConfiguration()
                           .WriteTo
                             .Logger(lc => lc.Filter

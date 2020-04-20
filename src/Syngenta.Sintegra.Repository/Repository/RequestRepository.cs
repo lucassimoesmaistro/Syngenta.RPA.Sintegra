@@ -37,6 +37,17 @@ namespace Syngenta.Sintegra.Repository.Repository
         {
             _db?.Dispose();
         }
+
+        public async Task<IEnumerable<Request>> GetAllRequestsWithAllItemsProcessed()
+        {
+            return await _db.RequestVerification
+                .Where(w => w.RequestStatus.Equals(RequestStatus.Processed))
+                .Include(i => i.RequestItems)
+                .ThenInclude(t => t.ChangeLogs)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Request>> GetAllRequestsWithRegisteredItems()
         {
 //            var sql = _db.RequestVerification.Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems)).ToSql();

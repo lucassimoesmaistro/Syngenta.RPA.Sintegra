@@ -49,16 +49,12 @@ namespace Syngenta.Sintegra.IntegratedTests
             var newDBase = new NewDBaseGateway(new ConfigurationManager(configuration));
 
             // Act
-            SintegraNacionalResponseDTO result = newDBase.GetDataByCpf("14321092949", "MT").Result;
+            SintegraNacionalResponseDTO result = newDBase.GetDataByCpf("05348013072", "MT").Result;
 
             // Assert
             Assert.Equal(200, result.Response.Status.Code);
             Assert.NotNull(result);
             Assert.Equal("MT", result.Response.Output.FirstOrDefault().sg_UFLocalizacao);
-            var cpf = result.Response.Output.FirstOrDefault().nr_CNPJ.ToString().Replace(".", "");
-            cpf = cpf.Replace("-", "");
-            cpf = cpf.Replace("/", "");
-            Assert.Equal("14321092949", cpf);
         }
     }
 }

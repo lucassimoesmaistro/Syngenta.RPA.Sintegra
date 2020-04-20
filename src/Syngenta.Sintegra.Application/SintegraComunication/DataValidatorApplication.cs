@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Syngenta.Common.DomainObjects.DTO;
+using Syngenta.Common.Log;
 using Syngenta.Sintegra.Domain;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,16 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
         private readonly IMapper _mapper;
         private readonly IRequestRepository _repository;
         private readonly ISintegraFacade _sintegraFacade;
+        public IConfiguration Configuration { get; }
 
-        public DataValidatorApplication(IMapper mapper, IRequestRepository repository, ISintegraFacade sintegraFacade)
+        private readonly int _maxParalelRequest;
+
+        public DataValidatorApplication(IConfiguration configuration,
+                                        IMapper mapper,
+                                        IRequestRepository repository,
+                                        ISintegraFacade sintegraFacade)
         {
+            _maxParalelRequest = int.Parse(configuration["SintegraWebService:MaxParalelRequest"]);
             _mapper = mapper;
             _repository = repository;
             _sintegraFacade = sintegraFacade;
@@ -149,18 +157,23 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
 
         public async Task<bool> GetAllNewRequestsAndVerify()
         {
+            Logger.Logar.Information($"GetAllNewRequestsAndVerify - maxParallelRequests: {_maxParalelRequest}");
+
             var requestsToVerify = await _repository.GetAllRequestsWithRegisteredItems();
             bool result = false;
-            int maxParallelRequests = 3;
+            Logger.Logar.Information($"requestsToVerify: {requestsToVerify.Count()}");
             requestsToVerify.ToList().ForEach(request =>
             {
+                Logger.Logar.Information($"request: {request.Id.ToString()}");
                 bool allRequestItemsOk = true;
                 List<RequestItem> list = request.RequestItems.Where(w=>w.RequestItemStatus != RequestItemStatus.Checked).ToList();
-                for (int i = 0; i < list.Count; i = i + maxParallelRequests)
+                Logger.Logar.Information($"RequestItems: {list.Count()}");
+                for (int i = 0; i < list.Count; i = i + _maxParalelRequest)
                 {
-                    var items = list.Skip(i).Take(maxParallelRequests).ToList();
+                    var items = list.Skip(i).Take(_maxParalelRequest).ToList();
                     Parallel.ForEach(items, item =>
                     {
+                        Logger.Logar.Information($"Item: {item.Id}");
                         SintegraNacionalResponseDTO response;
                         Customer customer;
 
@@ -171,12 +184,14 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
 
                         if (SintegraResponseOK(response))
                         {
-                            customer = ConvertToCustomer(response);
+                            Logger.Logar.Information($"Item: {item.Id} - SintegraResponseOK");
+                            customer = _mapper.Map<Customer>(response.Response.Output.FirstOrDefault());
                             VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
                             item.SetStatusChecked();
                         }
                         else
                         {
+                            Logger.Logar.Error($"Item: {item.Id} - SetStatusCommunicationFailure - {response.Response.Status.Message}");
                             allRequestItemsOk = false;
                             item.SetStatusCommunicationFailure();
                         }
@@ -191,17 +206,13 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
 
                 _repository.Update(request);
 
-                result = _repository.UnitOfWork.Commit().Result;
+                result = _repository.UnitOfWork.Commit().Result && allRequestItemsOk;
             });
 
 
             return result;
         }
 
-        private Customer ConvertToCustomer(SintegraNacionalResponseDTO response)
-        {
-            return _mapper.Map<Customer>(response.Response.Output.FirstOrDefault());
-        }
 
         private static bool SintegraResponseOK(SintegraNacionalResponseDTO sintegraResponse)
         {

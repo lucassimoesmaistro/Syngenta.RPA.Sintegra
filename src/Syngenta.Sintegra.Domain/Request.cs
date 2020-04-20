@@ -61,6 +61,11 @@ namespace Syngenta.Sintegra.Domain
         {
             RequestStatus = RequestStatus.Processed;
         }
+
+        public void SetAsOutputFileGenerated()
+        {
+            RequestStatus = RequestStatus.OutputFileGenerated;
+        }
     }
 
 }

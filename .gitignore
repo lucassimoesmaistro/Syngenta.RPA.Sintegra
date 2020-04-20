@@ -48,3 +48,5 @@
 /test/Syngenta.Sintegra.Application.Tests/obj
 /test/Syngenta.Sintegra.IntegratedTests/bin/Debug/netcoreapp3.1
 /test/Syngenta.Sintegra.IntegratedTests/obj
+/src/Syngenta.Sintegra.AntiCorruption/bin/Release/netcoreapp3.1
+/src/Syngenta.Sintegra.Repository/bin/Release/netcoreapp3.1

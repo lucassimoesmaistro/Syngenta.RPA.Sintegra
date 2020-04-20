@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Syngenta.Common.Log;
 using Syngenta.Common.Office;
 using Syngenta.Sintegra.Application.InputFiles.Models;
 using Syngenta.Sintegra.Domain;
@@ -18,6 +19,7 @@ namespace Syngenta.Sintegra.Application.InputFiles
         private readonly string _filesPath;
         private readonly IMapper _mapper;
         private readonly IRequestRepository _repository;
+        public IConfiguration Configuration { get; }
 
         public InputFilesApplication(IConfiguration configuration,
                                  IMapper mapper,
@@ -28,13 +30,15 @@ namespace Syngenta.Sintegra.Application.InputFiles
             _repository = repository;
         }
 
-        public IConfiguration Configuration { get; }
-
         public async Task<List<string>> GetAllFilesInInputFolder()
         {
+            Logger.Logar.Information("GetAllFilesInInputFolder");
             return await Task.Run(()=>
             {
                 string[] filePaths = Directory.GetFiles(_filesPath);
+
+                Logger.Logar.Information($"Total Files: {filePaths.Length}");
+
                 return filePaths.OfType<string>().ToList();
             });
         }
@@ -52,7 +56,11 @@ namespace Syngenta.Sintegra.Application.InputFiles
                 List<Request> requests = new List<Request>();
                 Parallel.ForEach(filesList, file =>
                 {
+                    Logger.Logar.Information($"File: {file}");
                     var excel = ExcelExtensions.Read<CustomersColletionModel>(file);
+
+                    Logger.Logar.Information($"Total Customers: {excel.Count}");
+
                     var request = RequestFactory.NewDraftOfRequest(file);
                     excel.ForEach(customer =>
                     {
@@ -61,9 +69,11 @@ namespace Syngenta.Sintegra.Application.InputFiles
                     });
                     request.SetAsRegisteredItems();
                     _repository.Add(request);
-                    var retorno = _repository.UnitOfWork?.Commit().Result;
+                    Logger.Logar.Information($"Total Items: {request.RequestItems.Count}");
+                    var retorno = _repository.UnitOfWork.Commit().Result;
                     requests.Add(request);
                 });
+                Logger.Logar.Information($"Total Requests: {requests.Count}");
                 return requests;
             });
         }

@@ -60,7 +60,7 @@ namespace Syngenta.Sintegra.Application.Tests
             //sintegraWebService.Setup(x => x.GetDataByCpf(customerCnpj.CustomerCNPJ, customerCnpj.CustomerRegion))
             //              .Returns(Task.Run(() => GetCustomerMockCpf()));
 
-            var app = new DataValidatorApplication(AutoMapperInitializer(), repository.Object, sintegraWebService.Object);
+            var app = new DataValidatorApplication(GetConfiguration(), AutoMapperInitializer(), repository.Object, sintegraWebService.Object);
 
             return app;
         }

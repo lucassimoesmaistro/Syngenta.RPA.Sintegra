@@ -2,7 +2,7 @@
   "profiles": {
     "Syngenta.Sintegra.ScheduledService": {
       "commandName": "Project",
-      "commandLineArgs": "Development DataValidatorApplication"
+      "commandLineArgs": "Development InputFilesApplication"
     }
   }
 }

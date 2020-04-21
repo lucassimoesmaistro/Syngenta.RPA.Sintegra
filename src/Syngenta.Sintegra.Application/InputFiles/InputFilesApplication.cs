@@ -16,7 +16,8 @@ namespace Syngenta.Sintegra.Application.InputFiles
 {
     public class InputFilesApplication : IInputFilesApplication
     {
-        private readonly string _filesPath;
+        private readonly string _sourcePath;
+        private readonly string _targetPath;
         private readonly IMapper _mapper;
         private readonly IRequestRepository _repository;
         public IConfiguration Configuration { get; }
@@ -25,7 +26,8 @@ namespace Syngenta.Sintegra.Application.InputFiles
                                  IMapper mapper,
                                  IRequestRepository repository)
         {
-            _filesPath = configuration["FilesPath:NewFiles"];
+            _sourcePath = configuration["FilesPath:NewFiles"];
+            _targetPath = configuration["FilesPath:ProcessedFiles"];
             _mapper = mapper;
             _repository = repository;
         }
@@ -35,7 +37,7 @@ namespace Syngenta.Sintegra.Application.InputFiles
             Logger.Logar.Information("GetAllFilesInInputFolder");
             return await Task.Run(()=>
             {
-                string[] filePaths = Directory.GetFiles(_filesPath);
+                string[] filePaths = Directory.GetFiles(_sourcePath);
 
                 Logger.Logar.Information($"Total Files: {filePaths.Length}");
 
@@ -71,6 +73,8 @@ namespace Syngenta.Sintegra.Application.InputFiles
                     _repository.Add(request);
                     Logger.Logar.Information($"Total Items: {request.RequestItems.Count}");
                     var retorno = _repository.UnitOfWork.Commit().Result;
+                    string[] fileName = file.Split(@"\");
+                    ExcelExtensions.Move(_sourcePath, fileName[fileName.Length-1], _targetPath);                    
                     requests.Add(request);
                 });
                 Logger.Logar.Information($"Total Requests: {requests.Count}");

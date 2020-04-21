@@ -1,6 +1,7 @@
 ﻿using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Syngenta.Common.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,7 +87,7 @@ namespace Syngenta.Common.Office
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            string sFileName = $"{fileName}_{System.DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+            string sFileName = $"{fileName}.xlsx";
 
             var memory = new MemoryStream();
 
@@ -141,10 +142,9 @@ namespace Syngenta.Common.Office
                             else
                                 row.CreateCell(coluna).SetCellValue(item.GetType().GetProperty(property.Name).GetValue(item, null).ToString());
                         }
-                        catch
+                        catch (Exception e)
                         {
-                            //TODO: tratar Exceção
-                            //row.CreateCell(coluna).SetCellValue("erro");
+                            Logger.Logar.Error(e, $@"Create File: {path}\{sFileName}");
                         }
 
                         coluna++;
@@ -167,6 +167,18 @@ namespace Syngenta.Common.Office
             File.Delete(fullPath);
         }
 
+        public static void Move(string sourcePath, string fileName, string targetPath)
+        {
+            string sourceFile = Path.Combine(sourcePath, fileName);
+            string destFile = Path.Combine(targetPath, fileName);
+
+            if (!Directory.Exists(targetPath))
+            {
+                Directory.CreateDirectory(targetPath);
+            }
+
+            File.Move(sourceFile, destFile);
+        }
     }
 
 }

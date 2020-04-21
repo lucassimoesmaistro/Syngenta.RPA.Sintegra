@@ -24,7 +24,7 @@ namespace Syngenta.Sintegra.Application.OutputFiles
                                       IMapper mapper,
                                       IRequestRepository repository)
         {
-            _filesPath = configuration["FilesPath:ProcessedFiles"];
+            _filesPath = configuration["FilesPath:OutputFiles"];
             _mapper = mapper;
             _repository = repository;
         }

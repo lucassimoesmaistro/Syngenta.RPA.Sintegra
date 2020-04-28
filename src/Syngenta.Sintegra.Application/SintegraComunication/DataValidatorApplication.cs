@@ -195,7 +195,7 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
                         
                         SintegraNacionalResponseDTO response = GetDataFromSintegra(item);
 
-                        if (SintegraResponseOK(response))
+                        if (response.Response.Status.Code == 200)
                         {
                             Logger.Logar.Information($"Item: {logInfo} - SintegraResponseOK");
 
@@ -254,11 +254,6 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
             return response;
         }
 
-        private static bool SintegraResponseOK(SintegraNacionalResponseDTO sintegraResponse)
-        {
-            return sintegraResponse.Response.Status.Code == 200 &&
-                                        sintegraResponse.Response.Output != null &&
-                                        sintegraResponse.Response.Output.Count > 0;
-        }
+        
     }
 }

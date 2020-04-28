@@ -1,4 +1,5 @@
 ﻿using Syngenta.Common.DomainObjects;
+using System;
 
 namespace Syngenta.Sintegra.Domain
 {
@@ -17,10 +18,13 @@ namespace Syngenta.Sintegra.Domain
         public string CNPJ { get; private set; }
         public string CPF { get; private set; }
         public string InscricaoEstadual { get; private set; }
+        public string SituacaoDoContribuinte { get; private set; }
+        public string TipoIE { get; private set; }
+        public DateTime? DataDaSituação { get; private set; }
 
         protected Customer() { }
 
-        public Customer(string customerId, string name, string street, string houseNumber, string district, string postalCode, string city, string country, string region, string cnpj, string cpf, string inscricaoEstadual)
+        public Customer(string customerId, string name, string street, string houseNumber, string district, string postalCode, string city, string country, string region, string cnpj, string cpf, string inscricaoEstadual, string situacaoDoContribuinte, string tipoIE, DateTime? dataDaSituação)
         {
             CustomerId = customerId;
             Name = name;
@@ -34,8 +38,11 @@ namespace Syngenta.Sintegra.Domain
             CNPJ = cnpj;
             CPF = cpf;
             InscricaoEstadual = inscricaoEstadual;
+            SituacaoDoContribuinte = situacaoDoContribuinte;
+            TipoIE = tipoIE;
+            DataDaSituação = dataDaSituação;
         }
-        public Customer(string name, string street, string houseNumber, string district, string postalCode, string city, string country, string region, string cnpj, string cpf, string inscricaoEstadual)
+        public Customer(string name, string street, string houseNumber, string district, string postalCode, string city, string country, string region, string cnpj, string cpf, string inscricaoEstadual, string situacaoDoContribuinte, string tipoIE, DateTime? dataDaSituação)
         {
             Name = name;
             Street = street;
@@ -48,6 +55,25 @@ namespace Syngenta.Sintegra.Domain
             CNPJ = cnpj;
             CPF = cpf;
             InscricaoEstadual = inscricaoEstadual;
+            SituacaoDoContribuinte = situacaoDoContribuinte;
+            TipoIE = tipoIE;
+            DataDaSituação = dataDaSituação;
+        }
+        public Customer(string name, string street, string houseNumber, string district, string postalCode, string city, string country, string region, string cnpj, string cpf, string inscricaoEstadual, string situacaoDoContribuinte, string tipoIE)
+        {
+            Name = name;
+            Street = street;
+            HouseNumber = houseNumber;
+            District = district;
+            PostalCode = postalCode;
+            City = city;
+            Country = country;
+            Region = region;
+            CNPJ = cnpj;
+            CPF = cpf;
+            InscricaoEstadual = inscricaoEstadual;
+            SituacaoDoContribuinte = situacaoDoContribuinte;
+            TipoIE = tipoIE;
         }
     }
 }

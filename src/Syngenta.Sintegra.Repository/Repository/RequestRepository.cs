@@ -48,15 +48,19 @@ namespace Syngenta.Sintegra.Repository.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Request>> GetAllRequestsWithRegisteredItems()
+        public async Task<IEnumerable<Request>> GetAllRequestsWithRegisteredItemsAndCommunicationFailure()
         {
-//            var sql = _db.RequestVerification.Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems)).ToSql();
+            //var sql = _db.RequestVerification.Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems))
+            //    .Include(i => i.RequestItems)
+            //        .Include(i => i.RequestItemStatus == RequestItemStatus.Registered).ToSql();
             return await _db.RequestVerification
                 .Where(w => w.RequestStatus.Equals(RequestStatus.RegisteredItems))
                 .Include(i => i.RequestItems)
-                //.Include(i=>i.RequestItems.Where(wh=> wh.RequestItemStatus == RequestItemStatus.Registered))
+                    //.ThenInclude(i=>i.RequestItemStatus == RequestItemStatus.Registered)
                 .AsNoTracking()
                 .ToListAsync();
+
+
         }
 
         public void Update(Request request)

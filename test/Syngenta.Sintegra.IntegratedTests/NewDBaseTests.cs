@@ -1,26 +1,33 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.AntiCorruption;
+using Syngenta.Sintegra.Bootstrapper;
 using System.IO;
 using System.Linq;
 using Xunit;
 
 namespace Syngenta.Sintegra.IntegratedTests
 {
+    [Collection(nameof(IntegratedTestsCollection))]
     public class NewDBaseTests
     {
+        private readonly IConfiguration _configuration;
+        private readonly IntegratedTestsFixture _fixture;
+
+        public NewDBaseTests(IntegratedTestsFixture fixture)
+        {
+            _fixture = fixture;
+            _configuration = _fixture.BuildServiceCollection();
+        }
+
         [Fact(DisplayName = "Get Data By Cnpj")]
         [Trait("Integrated Tests", "NewdBase")]
         public void ShouldGetDataByCnpj()
         {
             // Arrange
-
-            string appSetting = Directory.GetCurrentDirectory() + @"\appsettings.Test.json";
-            var configuration =  new ConfigurationBuilder()
-                        .AddJsonFile(appSetting)
-                        .Build();
-
-            var newDBase = new NewDBaseGateway(new ConfigurationManager(configuration));
+            var newDBase = new NewDBaseGateway(new ConfigurationManager(_configuration));
 
             // Act
             SintegraNacionalResponseDTO result = newDBase.GetDataByCnpj("91032201000126", "RS").Result;
@@ -39,14 +46,9 @@ namespace Syngenta.Sintegra.IntegratedTests
         [Trait("Integrated Tests", "NewdBase")]
         public void ShouldGetDataByCpf()
         {
-            // Arrange
+            // Arrange            
 
-            string appSetting = Directory.GetCurrentDirectory() + @"\appsettings.Test.json";
-            var configuration = new ConfigurationBuilder()
-                        .AddJsonFile(appSetting)
-                        .Build();
-
-            var newDBase = new NewDBaseGateway(new ConfigurationManager(configuration));
+            var newDBase = new NewDBaseGateway(new ConfigurationManager(_configuration));
 
             // Act
             SintegraNacionalResponseDTO result = newDBase.GetDataByCpf("05348013072", "MT").Result;

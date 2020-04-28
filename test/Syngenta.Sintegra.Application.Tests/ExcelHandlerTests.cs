@@ -1,10 +1,14 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Syngenta.Common.Data;
 using Syngenta.Common.Office;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.InputFiles.Models;
+using Syngenta.Sintegra.Bootstrapper;
 using Syngenta.Sintegra.Domain;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -18,6 +22,7 @@ namespace Syngenta.Sintegra.Application.Tests
         public ExcelHandlerTests(ApplicationTestsFixture applicationTestsFixture)
         {
             _applicationTestsFixture = applicationTestsFixture;
+            _applicationTestsFixture.BuildServiceCollection();
         }
 
         [Fact(DisplayName = "Read Excel File")]
@@ -39,7 +44,6 @@ namespace Syngenta.Sintegra.Application.Tests
         public void ShouldGetFilesToImport()
         {
             // Arrange  
-
             InputFilesApplication app = _applicationTestsFixture.GetInputFilesApplication();
 
             // Act
@@ -54,7 +58,7 @@ namespace Syngenta.Sintegra.Application.Tests
         [Trait("Unit Tests", "Excel - Import Data")]
         public void ShouldImportCurstomersFromExcelFiles()
         {
-            // Arrange            
+            // Arrange    
             InputFilesApplication app = _applicationTestsFixture.GetInputFilesApplication();
 
             // Act

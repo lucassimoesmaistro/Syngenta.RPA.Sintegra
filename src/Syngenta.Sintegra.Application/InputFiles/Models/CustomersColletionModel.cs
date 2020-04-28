@@ -24,11 +24,11 @@ namespace Syngenta.Sintegra.Application.InputFiles.Models
         public string Country { get; set; }
         [ExcelColumn("Region")]
         public string Region { get; set; }
-        [ExcelColumn("CNPJ")]
+        [ExcelColumn("Tax Number 1")]
         public string CNPJ { get; set; }
-        [ExcelColumn("CPF")]
+        [ExcelColumn("Tax Number 2")]
         public string CPF { get; set; }
-        [ExcelColumn("I.E")]
+        [ExcelColumn("Tax Number 3")]
         public string InscricaoEstadual { get; set; }
     }
 }

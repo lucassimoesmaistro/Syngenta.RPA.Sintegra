@@ -60,5 +60,11 @@ namespace Syngenta.Sintegra.Application.OutputFiles.Models
         public string InscricaoEstadual { get; set; }
         [ExcelColumn("I.E. Sintegra")]
         public string InscricaoEstadualSintegra { get; set; }
+        [ExcelColumn("Situacao Do Contribuinte")]
+        public string SituacaoDoContribuinte { get; set; }
+        [ExcelColumn("Tipo I.E.")]
+        public string TipoIE { get; set; }
+        [ExcelColumn("Data Da Situação")]
+        public string DataDaSituação { get; set; }
     }
 }

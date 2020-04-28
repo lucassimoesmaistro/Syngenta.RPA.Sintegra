@@ -8,6 +8,7 @@ namespace Syngenta.Sintegra.Domain
     {
         Registered = 1,
         Checked = 5,
-        CommunicationFailure = 10
+        CommunicationFailure = 10,
+        NotFound = 20
     }
 }

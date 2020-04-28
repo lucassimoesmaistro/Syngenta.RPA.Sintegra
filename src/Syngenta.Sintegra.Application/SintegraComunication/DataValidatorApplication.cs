@@ -16,7 +16,6 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
         private readonly IMapper _mapper;
         private readonly IRequestRepository _repository;
         private readonly ISintegraFacade _sintegraFacade;
-        public IConfiguration Configuration { get; }
 
         private readonly int _maxParalelRequest;
 
@@ -25,7 +24,7 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
                                         IRequestRepository repository,
                                         ISintegraFacade sintegraFacade)
         {
-            _maxParalelRequest = int.Parse(configuration["SintegraWebService:MaxParalelRequest"]);
+            _maxParalelRequest = int.Parse(configuration.GetSection("SintegraWebService:MaxParalelRequest").Value);
             _mapper = mapper;
             _repository = repository;
             _sintegraFacade = sintegraFacade;
@@ -33,7 +32,7 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
 
         public async Task<IEnumerable<Request>> GetValidationRequestWithRegisteredItems()
         {
-            return await _repository.GetAllRequestsWithRegisteredItems();
+            return await _repository.GetAllRequestsWithRegisteredItemsAndCommunicationFailure();
         }
         
         public void Dispose()
@@ -146,6 +145,17 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
                     changeLog.ConnectToRequestItem(item.Id);
                     _repository.AddChangeLog(changeLog);
                 }
+                var changeLogConstant = new ChangeLog("SituacaoDoContribuinte", customer.SituacaoDoContribuinte);
+                changeLogConstant.ConnectToRequestItem(item.Id);
+                _repository.AddChangeLog(changeLogConstant);
+
+                changeLogConstant = new ChangeLog("TipoIE", customer.TipoIE);
+                changeLogConstant.ConnectToRequestItem(item.Id);
+                _repository.AddChangeLog(changeLogConstant);
+
+                changeLogConstant = new ChangeLog("DataDaSituação", customer.DataDaSituação.ToString());
+                changeLogConstant.ConnectToRequestItem(item.Id);
+                _repository.AddChangeLog(changeLogConstant);
             });
             
         }
@@ -159,39 +169,41 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
         {
             Logger.Logar.Information($"GetAllNewRequestsAndVerify - maxParallelRequests: {_maxParalelRequest}");
 
-            var requestsToVerify = await _repository.GetAllRequestsWithRegisteredItems();
+            var requestsToVerify = await _repository.GetAllRequestsWithRegisteredItemsAndCommunicationFailure();
             bool result = false;
             Logger.Logar.Information($"requestsToVerify: {requestsToVerify.Count()}");
             requestsToVerify.ToList().ForEach(request =>
             {
                 Logger.Logar.Information($"request: {request.Id.ToString()}");
                 bool allRequestItemsOk = true;
-                List<RequestItem> list = request.RequestItems.Where(w=>w.RequestItemStatus != RequestItemStatus.Checked).ToList();
+
+                //TODO: Fiz the Repository Query in GetAllRequestsWithRegisteredItemsAndCommunicationFailure to avoid next line wiht Linq to Objets
+                List<RequestItem> list = request.RequestItems
+                                .Where(w => w.RequestItemStatus.Equals(RequestItemStatus.Registered) ||
+                                            w.RequestItemStatus.Equals(RequestItemStatus.CommunicationFailure))
+                                .ToList();
+
                 Logger.Logar.Information($"RequestItems: {list.Count()}");
                 for (int i = 0; i < list.Count; i = i + _maxParalelRequest)
                 {
                     var items = list.Skip(i).Take(_maxParalelRequest).ToList();
+
                     Parallel.ForEach(items, item =>
                     {
-                        Logger.Logar.Information($"Item: {item.Id}");
-                        SintegraNacionalResponseDTO response;
-                        Customer customer;
-
-                        if (!string.IsNullOrEmpty(item.CustomerCNPJ))
-                            response = _sintegraFacade.GetDataByCnpj(item.CustomerCNPJ, item.CustomerRegion).Result;
-                        else
-                            response = _sintegraFacade.GetDataByCpf(item.CustomerCPF, item.CustomerRegion).Result;
+                        string logInfo = string.IsNullOrEmpty(item.CustomerCNPJ) ? item.CustomerCPF : item.CustomerCNPJ;
+                        Logger.Logar.Information($"Item: {logInfo}");
+                        
+                        SintegraNacionalResponseDTO response = GetDataFromSintegra(item);
 
                         if (SintegraResponseOK(response))
                         {
-                            Logger.Logar.Information($"Item: {item.Id} - SintegraResponseOK");
-                            customer = _mapper.Map<Customer>(response.Response.Output.FirstOrDefault());
-                            VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
-                            item.SetStatusChecked();
+                            Logger.Logar.Information($"Item: {logInfo} - SintegraResponseOK");
+
+                            PrepareAndVerify(item, response);
                         }
                         else
                         {
-                            Logger.Logar.Error($"Item: {item.Id} - SetStatusCommunicationFailure - {response.Response.Status.Message}");
+                            Logger.Logar.Error($"Item: {logInfo} - SetStatusCommunicationFailure - {response.Response.Status.Message}");
                             allRequestItemsOk = false;
                             item.SetStatusCommunicationFailure();
                         }
@@ -213,6 +225,34 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
             return result;
         }
 
+        private void PrepareAndVerify(RequestItem item, SintegraNacionalResponseDTO response)
+        {
+            Customer customer;
+
+            var output = response.Response.Output.Where(w => w.nr_InscricaoEstadual.Equals(item.CustomerInscricaoEstadual)).FirstOrDefault();
+            if (output == null)
+            {
+                customer = new Customer(item.CustomerName, item.CustomerStreet, item.CustomerHouseNumber, item.CustomerDistrict, item.CustomerPostalCode, item.CustomerDistrict, item.CustomerCountry, item.CustomerRegion, item.CustomerCNPJ, item.CustomerCPF, "NÃO ENCONTRADO", "NÃO ENCONTRADO", "NÃO ENCONTRADO");
+                item.SetStatusNotFound();
+            }
+            else
+            {
+                customer = _mapper.Map<Customer>(output);
+                item.SetStatusChecked();
+            }
+
+            VerifyDifferenceBetweenRequestItemAndSintegra(item, customer).Wait();
+        }
+
+        private SintegraNacionalResponseDTO GetDataFromSintegra(RequestItem item)
+        {
+            SintegraNacionalResponseDTO response;
+            if (!string.IsNullOrEmpty(item.CustomerCNPJ))
+                response = _sintegraFacade.GetDataByCnpj(item.CustomerCNPJ, item.CustomerRegion).Result;
+            else
+                response = _sintegraFacade.GetDataByCpf(item.CustomerCPF, item.CustomerRegion).Result;
+            return response;
+        }
 
         private static bool SintegraResponseOK(SintegraNacionalResponseDTO sintegraResponse)
         {

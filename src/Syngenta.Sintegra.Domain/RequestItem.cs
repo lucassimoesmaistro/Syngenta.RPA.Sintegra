@@ -62,7 +62,11 @@ namespace Syngenta.Sintegra.Domain
         {
             RequestItemStatus = RequestItemStatus.Checked;
         }
-
+        public void SetStatusNotFound()
+        {
+            RequestItemStatus = RequestItemStatus.NotFound;
+        }
+        
         public void SetStatusCommunicationFailure()
         {
             RequestItemStatus = RequestItemStatus.CommunicationFailure;

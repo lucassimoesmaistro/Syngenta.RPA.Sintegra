@@ -99,9 +99,12 @@ namespace Syngenta.Common.Office
 
                 int coluna = 0;
                 var row = excelSheet.CreateRow(coluna);
+                excelSheet.DefaultColumnWidth = 25;
                 foreach (PropertyInfo property in typeof(T).GetProperties())
                 {
-                    row.CreateCell(coluna).SetCellValue(property.Name);
+                    var name = property.CustomAttributes.FirstOrDefault().ConstructorArguments.FirstOrDefault().Value.ToString();
+
+                    row.CreateCell(coluna).SetCellValue(name);
                     coluna++;
                 }
 
@@ -170,14 +173,19 @@ namespace Syngenta.Common.Office
         public static void Move(string sourcePath, string fileName, string targetPath)
         {
             string sourceFile = Path.Combine(sourcePath, fileName);
-            string destFile = Path.Combine(targetPath, fileName);
+
+            var finalFileName = fileName.Split(".");
+
+
+            string destFile = Path.Combine(targetPath, $"{finalFileName[0]}_Read_{DateTime.Now.ToString("yyyyMMddHHmmss")}.{finalFileName[1]}");
 
             if (!Directory.Exists(targetPath))
             {
                 Directory.CreateDirectory(targetPath);
             }
 
-            File.Move(sourceFile, destFile);
+            if (File.Exists(sourceFile))
+                File.Move(sourceFile, destFile);
         }
     }
 

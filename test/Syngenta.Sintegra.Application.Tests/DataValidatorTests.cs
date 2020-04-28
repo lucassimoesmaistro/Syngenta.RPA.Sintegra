@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.AutoMock;
 using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.Application.SintegraComunication;
+using Syngenta.Sintegra.Bootstrapper;
 using Syngenta.Sintegra.Domain;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +28,9 @@ namespace Syngenta.Sintegra.Application.Tests
         public DataValidatorTests(ApplicationTestsFixture applicationTestsFixture)
         {
             _applicationTestsFixture = applicationTestsFixture;
+            _applicationTestsFixture.BuildServiceCollection();
             _mocker = new AutoMocker();
+            _mocker.GetMock<IConfiguration>().Setup(s=>s.GetSection("SintegraWebService:MaxParalelRequest").Value).Returns("3");
             _dataValidatorApp = _mocker.CreateInstance<DataValidatorApplication>();
         }
 
@@ -32,7 +38,7 @@ namespace Syngenta.Sintegra.Application.Tests
         [Trait("Unit Tests", "Sintegra")]
         public void ShouldGetValidationRequestWithRegisteredItems()
         {
-            // Arrange            
+            // Arrange
             DataValidatorApplication app = _applicationTestsFixture.GetDataValidatorApplication();    
 
             // Act
@@ -52,7 +58,7 @@ namespace Syngenta.Sintegra.Application.Tests
             _mocker.GetMock<IRequestRepository>().Setup(r => r.UnitOfWork.Commit()).Returns(Task.FromResult(true));
 
             _mocker.GetMock<IRequestRepository>()
-                .Setup(r => r.GetAllRequestsWithRegisteredItems()).Returns(_applicationTestsFixture.GetRequestCollectionMock());
+                .Setup(r => r.GetAllRequestsWithRegisteredItemsAndCommunicationFailure()).Returns(_applicationTestsFixture.GetRequestCollectionMock());
 
             _mocker.GetMock<ISintegraFacade>()
                 .Setup(r => r.GetDataByCnpj(It.IsAny<string>(), It.IsAny<string>()))
@@ -61,13 +67,14 @@ namespace Syngenta.Sintegra.Application.Tests
             _mocker.GetMock<ISintegraFacade>()
                 .Setup(r => r.GetDataByCpf(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_applicationTestsFixture.GetSintegraDTOMockCpf());
-            
+
+
             // Act
             var result = _dataValidatorApp.GetAllNewRequestsAndVerify().Result;
 
             // Assert
             Assert.True(result);
-            _mocker.GetMock<IRequestRepository>().Verify(r => r.GetAllRequestsWithRegisteredItems(), Times.Once);
+            _mocker.GetMock<IRequestRepository>().Verify(r => r.GetAllRequestsWithRegisteredItemsAndCommunicationFailure(), Times.Once);
             _mocker.GetMock<ISintegraFacade>().Verify(r => r.GetDataByCnpj(It.IsAny<string>(), It.IsAny<string>()), Times.AtLeast(2));
             _mocker.GetMock<ISintegraFacade>().Verify(r => r.GetDataByCpf(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             _mocker.GetMock<IRequestRepository>().Verify(r => r.UnitOfWork.Commit(), Times.Once);

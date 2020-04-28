@@ -60,7 +60,19 @@ namespace Syngenta.Sintegra.Application.AutoMapper
                             src.ChangeLogs.Where(w => w.FieldName.Equals("InscricaoEstadual")).FirstOrDefault() != null ?
                                 src.ChangeLogs.Where(w => w.FieldName.Equals("InscricaoEstadual")).FirstOrDefault().NewValue : ""))
                 .ForMember(dest => dest.CNPJ, opt => opt.MapFrom(src => src.CustomerCNPJ))
-                .ForMember(dest => dest.CPF, opt => opt.MapFrom(src => src.CustomerCPF));
+                .ForMember(dest => dest.CPF, opt => opt.MapFrom(src => src.CustomerCPF))
+                .ForMember(dest => dest.SituacaoDoContribuinte,
+                           opt => opt.MapFrom(src =>
+                            src.ChangeLogs.Where(w => w.FieldName.Equals("SituacaoDoContribuinte")).FirstOrDefault() != null ?
+                                src.ChangeLogs.Where(w => w.FieldName.Equals("SituacaoDoContribuinte")).FirstOrDefault().NewValue : ""))
+                .ForMember(dest => dest.TipoIE,
+                           opt => opt.MapFrom(src =>
+                            src.ChangeLogs.Where(w => w.FieldName.Equals("SituacaoDoContribuinte")).FirstOrDefault() != null ?
+                                src.ChangeLogs.Where(w => w.FieldName.Equals("SituacaoDoContribuinte")).FirstOrDefault().NewValue : ""))
+                .ForMember(dest => dest.DataDaSituação,
+                           opt => opt.MapFrom(src =>
+                            src.ChangeLogs.Where(w => w.FieldName.Equals("DataDaSituação")).FirstOrDefault() != null ?
+                                src.ChangeLogs.Where(w => w.FieldName.Equals("DataDaSituação")).FirstOrDefault().NewValue : ""));
 
         }
     }

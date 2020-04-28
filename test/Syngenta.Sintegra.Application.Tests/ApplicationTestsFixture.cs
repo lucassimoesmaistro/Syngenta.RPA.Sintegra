@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Serilog;
 using Syngenta.Common.DomainObjects.DTO;
 using Syngenta.Sintegra.Application.AutoMapper;
 using Syngenta.Sintegra.Application.InputFiles;
 using Syngenta.Sintegra.Application.SintegraComunication;
+using Syngenta.Sintegra.Bootstrapper;
 using Syngenta.Sintegra.Domain;
 using Syngenta.Sintegra.Repository;
 using System;
@@ -24,10 +27,22 @@ namespace Syngenta.Sintegra.Application.Tests
     {
         public IConfiguration GetConfiguration()
         {
+
             string appSetting = Directory.GetCurrentDirectory() + @"\appsettings.Test.json";
             return new ConfigurationBuilder()
                         .AddJsonFile(appSetting)
                         .Build();
+
+        }
+        public void BuildServiceCollection()
+        {
+
+            var configuration = GetConfiguration();
+
+            var serviceProvider = new ServiceCollection()
+               .AddLog($"Syngenta.Sintegra.ScheduledService.Tests", configuration["FilesPath:LogFiles"]);
+
+            serviceProvider.BuildServiceProvider();
         }
 
         public DataValidatorApplication GetDataValidatorApplication()
@@ -37,7 +52,7 @@ namespace Syngenta.Sintegra.Application.Tests
 
             var repository = new Mock<IRequestRepository>();
 
-            repository.Setup(x => x.GetAllRequestsWithRegisteredItems())
+            repository.Setup(x => x.GetAllRequestsWithRegisteredItemsAndCommunicationFailure())
                           .Returns(Task.Run(() => GetRequestCollectionMock()));
 
             var requestMock = Task.Run(() => GetRequestCollectionMock()).Result;
@@ -68,14 +83,14 @@ namespace Syngenta.Sintegra.Application.Tests
         public async Task<Customer> GetCustomerMockCpf()
         {
             return await Task.Run(() =>
-                new Customer("ORLANDO POLATO E OUTRO", "BR 364 KM + 118 + 6 KM A ESQUERDA", "SN", "ZONA RURAL", "78795000", string.Empty, string.Empty, "MT", string.Empty, string.Empty, "132839717")
+                new Customer("ORLANDO POLATO E OUTRO", "BR 364 KM + 118 + 6 KM A ESQUERDA", "SN", "ZONA RURAL", "78795000", string.Empty, string.Empty, "MT", string.Empty, string.Empty, "132839717", "Habilitado", "IE Normal", DateTime.Now)
             );
         }
 
         public async Task<Customer> GetCustomerMockCnpj()
         {
             return await Task.Run(() =>
-                new Customer("HEINZ BRASIL S.A.", "RODOVIA GO 080", "SN", "ZONA RURAL", "75460000", string.Empty, string.Empty, "GO", "50.955.707/0004-72", string.Empty, "101884427")
+                new Customer("HEINZ BRASIL S.A.", "RODOVIA GO 080", "SN", "ZONA RURAL", "75460000", string.Empty, string.Empty, "GO", "50.955.707/0004-72", string.Empty, "101884427", "Habilitado", "IE Normal", DateTime.Now)
             );
         }
 
@@ -181,6 +196,7 @@ namespace Syngenta.Sintegra.Application.Tests
             var configuration = GetConfiguration();
 
             var repository = new Mock<IRequestRepository>();
+            repository.Setup(r => r.UnitOfWork.Commit()).Returns(Task.FromResult(true));
 
             var app = new InputFilesApplication(configuration, AutoMapperInitializer(), repository.Object);
 

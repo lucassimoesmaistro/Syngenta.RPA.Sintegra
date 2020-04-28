@@ -51,9 +51,11 @@ namespace Syngenta.Sintegra.Application.OutputFiles
 
                     List<OutputFileColumns> list = _mapper.Map<List<OutputFileColumns>>(request.RequestItems);
 
-                    string[] fileName = request.FileName.Split(@"\");
-                    
-                    var file = ExcelExtensions.Create<OutputFileColumns>(_filesPath, $"{fileName[fileName.Length - 1]}_Output_{DateTime.Now.ToString("yyyyMMddHHmmss")}", "teste", list);
+                    string[] fileNameSegments = request.FileName.Split(@"\");
+
+                    string[] fileName = fileNameSegments[fileNameSegments.Length - 1].Split(".");
+
+                    var file = ExcelExtensions.Create<OutputFileColumns>(_filesPath, $"{fileName[0]}_Output_{DateTime.Now.ToString("yyyyMMddHHmmss")}", "Output", list);
 
                     if (allRequestItemsOk)
                         request.SetAsOutputFileGenerated();

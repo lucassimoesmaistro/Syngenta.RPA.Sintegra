@@ -229,7 +229,7 @@ namespace Syngenta.Sintegra.Application.SintegraComunication
         {
             Customer customer;
 
-            var output = response.Response.Output.Where(w => w.nr_InscricaoEstadual.Equals(item.CustomerInscricaoEstadual)).FirstOrDefault();
+            var output = response.Response.Output.Where(w => w.nr_InscricaoEstadual.Replace(",", "").Replace(".", "").Replace("-", "").Replace("/", "").Equals(item.CustomerInscricaoEstadual)).FirstOrDefault();
             if (output == null)
             {
                 customer = new Customer(item.CustomerName, item.CustomerStreet, item.CustomerHouseNumber, item.CustomerDistrict, item.CustomerPostalCode, item.CustomerDistrict, item.CustomerCountry, item.CustomerRegion, item.CustomerCNPJ, item.CustomerCPF, "NÃO ENCONTRADO", "NÃO ENCONTRADO", "NÃO ENCONTRADO");
